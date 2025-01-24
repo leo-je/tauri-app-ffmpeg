@@ -59,7 +59,7 @@ jobs:
 
       # 上传构建的可执行文件作为 Artifact（可选）
       - name: Upload Windows Build Artifact
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v4
         with:
           name: tauri-windows-build
           path: target/release/bundle/installer/*.exe  # 你要上传的构建文件路径
