@@ -5,7 +5,7 @@
   "identifier": "com.tauri-app-ffmpeg.app",
   "bundle": {
     "resources":[
-      "./assets/win/*"
+      "/assets/win/*"
     ]
   }
 }
