@@ -1,4 +1,4 @@
-name: Build Tauri App for Windows
+name: R elease
 
 on:
   push:
@@ -10,16 +10,25 @@ on:
 
 jobs:
   build:
-    runs-on: windows-latest  # 使用 Windows 环境进行构建
+    permissions:
+      contents: write
+    strategy:
+      matrix:
+        include:
+          - platform: windows-latest
+            target: x86_64-pc-windows-msvc
+          - platform: windows-latest
+            target: ia64-pc-windows-msvc
+    runs-on: ${{matrix.platform}}  # 使用 Windows 环境进行构建
 
     steps:
       # 检出代码
       - name: Checkout code
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
 
       # 设置 Node.js
       - name: Set up Node.js
-        uses: actions/setup-node@v2
+        uses: actions/setup-node@v4
         with:
           node-version: '20'  # 使用的 Node.js 版本
 
@@ -30,10 +39,13 @@ jobs:
           npm install                   # 安装项目依赖
 
       # 安装 Rust 和相关工具链
-      - name: Set up Rust
-        uses: actions/setup-rust@v1
-        with:
-          rust-version: '1.60.0'  # 使用的 Rust 版本
+      # - name: Set up Rust
+      #   uses: actions/setup-rust@v1
+      #   with:
+      #     rust-version: '1.60.0'  # 使用的 Rust 版本
+      - name: Install Rust
+        run: |
+          rustup target add ${{matrix.target}}
 
       # 安装 Windows 依赖（如 Visual Studio 编译工具）
       - name: Install Windows Build Dependencies
