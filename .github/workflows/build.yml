@@ -18,7 +18,7 @@ jobs:
           - platform: windows-latest
             target: x86_64-pc-windows-msvc
             args: '--target: x86_64-pc-windows-msvc'
-    runs-on: ${{matrix.platform}}  # 使用 Windows 环境进行构建
+    runs-on: windows-latest  # 使用 Windows 环境进行构建
 
     steps:
       # 检出代码
