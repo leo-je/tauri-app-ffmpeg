@@ -174,6 +174,7 @@ return $?
 `
 @echo off
 echo 开始转换...
+echo 'resourceDir:${p5}'
 ${p5}/assets/win/ffmpeg/bin/ffmpeg.exe -y -i ${form.filePath} ${form.isAugment ? form.augment : ''} ${outPath}
 echo 结束转换...
 `
