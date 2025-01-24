@@ -51,9 +51,9 @@ jobs:
       - name: dowm load ffmpeg
         run: |
           curl -L -o ffmpeg.zip https://github.com/GitHub-Laziji/ffmpeg-win/releases/download/v4.4.1/ffmpeg-4.4.1-full_build-shared.zip
-          7z x ffmpeg.zip -oC:/ffmpeg
+          7z x ffmpeg.zip -oD:/a/tauri-app-ffmpeg/tauri-app-ffmpeg/src-tauri/assets/win/
           # 将 ffmpeg 复制到项目的src-tauri/assets/win/下
-          cp -r C:/ffmpeg D:/a/tauri-app-ffmpeg/tauri-app-ffmpeg/src-tauri/assets/win/
+          # cp -r C:/ffmpeg D:/a/tauri-app-ffmpeg/tauri-app-ffmpeg/src-tauri/assets/win/
 
       # 安装 Windows 依赖（如 Visual Studio 编译工具）
       - name: Install Windows Build Dependencies
