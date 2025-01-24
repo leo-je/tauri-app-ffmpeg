@@ -66,6 +66,12 @@ jobs:
         run: |
           npm run tauri build
 
+      #- name: tauri-build
+        # You may pin to the exact commit or the version.
+        # uses: JonasKruckenberg/tauri-build@406f9292d464c04add8c74e8ed1ed4105b91a20e
+        #uses: JonasKruckenberg/tauri-build@v1.0.3
+          
+
       # 上传构建的可执行文件作为 Artifact（可选）
       - name: Upload Windows Build Artifact
         uses: actions/upload-artifact@v4
