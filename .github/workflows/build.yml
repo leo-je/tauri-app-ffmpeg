@@ -34,7 +34,7 @@ jobs:
       # 安装 Tauri CLI 及依赖
       - name: Install Tauri CLI and dependencies
         run: |
-          ls -al
+          pwd
           npm install -g @tauri-apps/cli  # 安装 Tauri CLI
           npm install                   # 安装项目依赖
 
