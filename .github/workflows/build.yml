@@ -80,4 +80,4 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: tauri-windows-build
-          path: target/release/bundle/installer/*.exe  # 你要上传的构建文件路径
+          path: src-tauri/target/release/bundle/installer/*.exe  # 你要上传的构建文件路径
