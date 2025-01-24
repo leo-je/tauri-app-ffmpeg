@@ -34,6 +34,7 @@ jobs:
       # 安装 Tauri CLI 及依赖
       - name: Install Tauri CLI and dependencies
         run: |
+          ls -al
           npm install -g @tauri-apps/cli  # 安装 Tauri CLI
           npm install                   # 安装项目依赖
 
@@ -42,7 +43,7 @@ jobs:
       #   uses: actions/setup-rust@v1
       #   with:
       #     rust-version: '1.60.0'  # 使用的 Rust 版本
-      - name: Install Rust
+      - name: Install Rust target
         run: |
           rustup target add ${{matrix.target}}
 
@@ -52,10 +53,18 @@ jobs:
           choco install visualstudio2019buildtools
           choco install windows-sdk-10.1
 
+      # 下载 ffmpeg    
+      - name: dowm load ffmpeg
+        run: |
+          curl -L -o ffmpeg.zip https://github.com/GitHub-Laziji/ffmpeg-win/releases/download/v4.4.1/ffmpeg-4.4.1-full_build-shared.zip
+          7z x ffmpeg.zip -oC:/ffmpeg
+          # 将 ffmpeg 复制到项目的src-tauri/assets/win/下
+          cp -r C:/ffmpeg C:/Users/runneradmin/src-tauri/assets/win/
+
       # 使用 Tauri 构建应用
       - name: Build Tauri App
         run: |
-          tauri build
+          npm run tauri build
 
       # 上传构建的可执行文件作为 Artifact（可选）
       - name: Upload Windows Build Artifact
