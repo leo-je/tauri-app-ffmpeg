@@ -76,8 +76,15 @@ jobs:
           
 
       # 上传构建的可执行文件作为 Artifact（可选）
-      - name: Upload Windows Build Artifact
+      - name: Upload Windows Build Artifact-exe
         uses: actions/upload-artifact@v4
         with:
           name: tauri-windows-build
-          path: D:/a/tauri-app-ffmpeg/tauri-app-ffmpeg/src-tauri/target/release/bundle/installer/*.exe  # 你要上传的构建文件路径
+          path: src-tauri\target\release\bundle\nsis\*.exe  # 你要上传的构建文件路径
+
+      # 上传构建的可执行文件作为 Artifact（可选）
+      - name: Upload Windows Build Artifact-msi
+        uses: actions/upload-artifact@v4
+        with:
+          name: tauri-windows-build
+          path: src-tauri\target\release\bundle\msi\*.msi  # 你要上传的构建文件路径
