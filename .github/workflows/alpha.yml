@@ -87,3 +87,36 @@ jobs:
           releaseDraft: true
           prerelease: false
           args: ${{ matrix.args }}
+
+      - name: Find the .dmg file
+        if: ${{ matrix.platform == 'macos-latest' }}
+        id: find-dmg
+        run: echo "DMG_FILE=$(find src-tauri/target/release/bundle/dmg -name '*.dmg')" >> $GITHUB_ENV
+
+      # 上传构建的可执行文件作为 Artifact（可选）
+      - name: Upload Artifact (DMG)
+        if: ${{ matrix.platform == 'macos-latest' }}
+        uses: actions/upload-artifact@v4
+        with:
+          name: tauri-macos-dmg
+          path: ${{ env.DMG_FILE }}  # 你要上传的构建文件路径
+
+      # 上传构建的可执行文件作为 Artifact（可选）
+      - name: Upload Windows Build Artifact-exe
+        if: ${{ matrix.platform == 'windows-latest' }}
+        uses: actions/upload-artifact@v4
+        with:
+          name: tauri-windows-build
+          path: src-tauri\target\release\bundle\nsis\*.exe  # 你要上传的构建文件路径
+
+      - name: Create GitHub Release
+        if: ${{ matrix.platform == 'macos-latest' }} && github.event_name == 'push'
+        uses: softprops/action-gh-release@v2 
+        with:
+          tag_name: v1.0.${{ github.run_number }}
+          name: "convert app Release v1.0.${{ github.run_number }}"
+          draft: false
+          prerelease: false
+          files: ${{ env.DMG_FILE }}
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
