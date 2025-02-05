@@ -92,6 +92,7 @@ jobs:
 
       # 上传构建的可执行文件作为 Artifact（可选）
       - name: Upload Windows Build Artifact-mac
+        if: ${{ matrix.platform == 'macos-latest' }}
         uses: actions/upload-artifact@v4
         with:
           name: tauri-windows-build
@@ -99,6 +100,7 @@ jobs:
 
       # 上传构建的可执行文件作为 Artifact（可选）
       - name: Upload Windows Build Artifact-exe
+        if: ${{ matrix.platform == 'windows-latest' }}
         uses: actions/upload-artifact@v4
         with:
           name: tauri-windows-build
