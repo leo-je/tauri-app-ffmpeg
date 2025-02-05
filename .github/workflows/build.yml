@@ -18,9 +18,12 @@ jobs:
           - platform: windows-latest
             target: x86_64-pc-windows-msvc
             args: '--target: x86_64-pc-windows-msvc'
-          - platform: macos-latest
-            target: x86_64-apple-darwin
-            args: '--target: x86_64-apple-darwin'
+          - platform: 'macos-latest' # for Arm based macs (M1 and above).
+            target: 'aarch64-apple-darwin'
+            args: '--target aarch64-apple-darwin'
+          - platform: 'macos-latest' # for Intel based macs.
+            target: 'x86_64-apple-darwin'
+            args: '--target x86_64-apple-darwin'
     runs-on: ${{matrix.platform}}  # 使用 Windows 环境进行构建
 
     steps:
@@ -84,7 +87,7 @@ jobs:
       # 使用 Tauri 构建应用
       - name: Build Tauri App
         run: |
-          npm run tauri build --target ${{ matrix.target }}
+          npm run tauri build
 
       #- name: tauri-build
         # You may pin to the exact commit or the version.
