@@ -56,9 +56,10 @@ jobs:
           New-Item -Path $FFMPEG_DIR -ItemType Directory -Force
           7z x ffmpeg.zip -aoa -o$FFMPEG_DIR
           ls $FFMPEG_DIR
-          # 7z x ffmpeg.zip ./ffmpeg
+          7z x ffmpeg.zip ./ffmpeg
           # cp ./ffmpeg $FFMPEG_DIR
-          # Copy-Item -Path "./ffmpeg/*" -Destination $FFMPEG_DIR -Recurse -Force
+          ls
+          Copy-Item -Path "./ffmpeg" -Destination $FFMPEG_DIR -Recurse -Force
           # echo ${pwd}
           # echo ${ls $FFMPEG_DIR}
           # 将 ffmpeg 复制到项目的src-tauri/assets/win/下
