@@ -113,9 +113,8 @@ jobs:
           path: src-tauri\target\release\bundle\nsis\*.exe  # 你要上传的构建文件路径
 
       - name: Create GitHub Release
-        if: ${{ matrix.platform == 'macos-latest' }}
-        uses: softprops/action-gh-release@v2
-        if: github.event_name == 'push'
+        if: ${{ matrix.platform == 'macos-latest' }} && github.event_name == 'push'
+        uses: softprops/action-gh-release@v2 
         with:
           tag_name: v1.0.${{ github.run_number }}
           name: "Tauri macOS Release v1.0.${{ github.run_number }}"
