@@ -84,7 +84,7 @@ jobs:
       # 使用 Tauri 构建应用
       - name: Build Tauri App
         run: |
-          npm run tauri build
+          npm run tauri build --target ${{ matrix.target }}
 
       #- name: tauri-build
         # You may pin to the exact commit or the version.
@@ -117,7 +117,7 @@ jobs:
         uses: softprops/action-gh-release@v2 
         with:
           tag_name: v1.0.${{ github.run_number }}
-          name: "Tauri macOS Release v1.0.${{ github.run_number }}"
+          name: "convert app Release v1.0.${{ github.run_number }}"
           draft: false
           prerelease: false
           files: ${{ env.DMG_FILE }}
