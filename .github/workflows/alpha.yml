@@ -19,8 +19,10 @@ jobs:
       matrix:
         include:
           - platform: 'macos-latest' # for Arm based macs (M1 and above).
+            target: 'aarch64-apple-darwin'
             args: '--target aarch64-apple-darwin'
           - platform: 'macos-latest' # for Intel based macs.
+            target: 'x86_64-apple-darwin'
             args: '--target x86_64-apple-darwin'
           - platform: 'ubuntu-22.04' # for Tauri v1 you could replace this with ubuntu-20.04.
             args: ''
@@ -91,15 +93,25 @@ jobs:
       - name: Find the .dmg file
         if: ${{ matrix.platform == 'macos-latest' }}
         id: find-dmg
-        run: echo "DMG_FILE=$(find src-tauri/target/release/bundle/dmg -name '*.dmg')" >> $GITHUB_ENV
+        run: |
+          echo "DMG_X86_FILE=$(find src-tauri/target/x86_64-apple-darwin/release/bundle/dmg -name '*.dmg')" >> $GITHUB_ENV
+          echo "DMG_ARM_FILE=$(find src-tauri/target/x86_64-apple-darwin/release/bundle/dmg -name '*.dmg')" >> $GITHUB_ENV
 
       # 上传构建的可执行文件作为 Artifact（可选）
-      - name: Upload Artifact (DMG)
-        if: ${{ matrix.platform == 'macos-latest' }}
+      - name: Upload Artifact (x86 DMG)
+        if: ${{ matrix.platform == 'macos-latest' }} && ${{ matrix.target == 'x86_64-apple-darwin'}}
         uses: actions/upload-artifact@v4
         with:
           name: tauri-macos-dmg
-          path: ${{ env.DMG_FILE }}  # 你要上传的构建文件路径
+          path: ${{ env.DMG_X86_FILE }}  # 你要上传的构建文件路径
+
+                # 上传构建的可执行文件作为 Artifact（可选）
+      - name: Upload Artifact (arm DMG)
+        if: ${{ matrix.platform == 'macos-latest' }} && ${{ matrix.target == 'aarch64-apple-darwin'}}
+        uses: actions/upload-artifact@v4
+        with:
+          name: tauri-macos-dmg
+          path: ${{ env.DMG_ARM_FILE }}  # 你要上传的构建文件路径
 
       # 上传构建的可执行文件作为 Artifact（可选）
       - name: Upload Windows Build Artifact-exe
