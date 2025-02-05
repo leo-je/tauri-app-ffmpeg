@@ -95,11 +95,11 @@ jobs:
         id: find-dmg
         run: |
           echo "DMG_X86_FILE=$(find src-tauri/target/x86_64-apple-darwin/release/bundle/dmg -name '*.dmg')" >> $GITHUB_ENV
-          echo "DMG_ARM_FILE=$(find src-tauri/target/x86_64-apple-darwin/release/bundle/dmg -name '*.dmg')" >> $GITHUB_ENV
+          echo "DMG_ARM_FILE=$(find src-tauri/target/aarch64-apple-darwin/release/bundle/dmg -name '*.dmg')" >> $GITHUB_ENV
 
       # 上传构建的可执行文件作为 Artifact（可选）
       - name: Upload Artifact (x86 DMG)
-        if: ${{ matrix.platform == 'macos-latest' }} && ${{ matrix.target == 'x86_64-apple-darwin'}}
+        if: ${{ matrix.platform == 'macos-latest' &&  matrix.target == 'x86_64-apple-darwin'}}
         uses: actions/upload-artifact@v4
         with:
           name: tauri-macos-dmg
@@ -107,7 +107,7 @@ jobs:
 
                 # 上传构建的可执行文件作为 Artifact（可选）
       - name: Upload Artifact (arm DMG)
-        if: ${{ matrix.platform == 'macos-latest' }} && ${{ matrix.target == 'aarch64-apple-darwin'}}
+        if: ${{ matrix.platform == 'macos-latest' &&  matrix.target == 'aarch64-apple-darwin'}}
         uses: actions/upload-artifact@v4
         with:
           name: tauri-macos-dmg
@@ -129,6 +129,6 @@ jobs:
           name: "convert app Release v1.0.${{ github.run_number }}"
           draft: false
           prerelease: false
-          files: ${{ env.DMG_FILE }}
+          files: ${{ env.DMG_FILE }},${{env.DMG_ARM_FILE}}
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
