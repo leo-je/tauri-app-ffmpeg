@@ -22,7 +22,10 @@
     }
   },
   "plugins": {
-    "shellx":{}
+    "shellx":{},
+    "updater":{
+      "active": false
+    }
   },
   "bundle": {
     "active": true,
@@ -35,9 +38,8 @@
       "icons/icon.ico"
     ]
   },
-  "tauri": {
-      "updater": {
-        "signatures": false
-      }
-    }
+  "updater":{
+    "active": false
+  }
+    
 }
