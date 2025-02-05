@@ -58,7 +58,7 @@ jobs:
           ls "./src-tauri/assets/win/ffmpeg"
           7z x ffmpeg.zip -aoa -o"./ffmpeg"
           ls
-          Copy-Item -Path "./ffmpeg" -Destination $FFMPEG_DIR -Recurse -Force
+          Copy-Item -Path "./ffmpeg" -Destination "./src-tauri/assets/win/ffmpeg" -Recurse -Force
 
       # 安装 Windows 依赖（如 Visual Studio 编译工具）
       - name: Install Windows Build Dependencies
