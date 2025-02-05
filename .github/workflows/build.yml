@@ -57,6 +57,7 @@ jobs:
           curl -L -o ffmpeg.zip https://evermeet.cx/ffmpeg/ffmpeg-118392-g0113e30806.zip
           mkdir -p "./src-tauri/assets/mac"
           7z x ffmpeg.zip -aoa -o"./ffmpeg-mac"
+          ls
           cp -r "./ffmpeg-mac/ffmpeg" "./src-tauri/assets/mac/"
 
       # 下载 ffmpeg    
@@ -89,14 +90,19 @@ jobs:
         # You may pin to the exact commit or the version.
         # uses: JonasKruckenberg/tauri-build@406f9292d464c04add8c74e8ed1ed4105b91a20e
         #uses: JonasKruckenberg/tauri-build@v1.0.3
+      
+      - name: Find the .dmg file
+        if: ${{ matrix.platform == 'macos-latest' }}
+        id: find-dmg
+        run: echo "DMG_FILE=$(find src-tauri/target/release/bundle/dmg -name '*.dmg')" >> $GITHUB_ENV
 
       # 上传构建的可执行文件作为 Artifact（可选）
-      - name: Upload Windows Build Artifact-mac
+      - name: Upload Artifact (DMG)
         if: ${{ matrix.platform == 'macos-latest' }}
         uses: actions/upload-artifact@v4
         with:
-          name: tauri-windows-build
-          path: src-tauri\target\release\bundle\dmg\*.dmg  # 你要上传的构建文件路径
+          name: tauri-macos-dmg
+          path: ${{ env.DMG_FILE }}  # 你要上传的构建文件路径
 
       # 上传构建的可执行文件作为 Artifact（可选）
       - name: Upload Windows Build Artifact-exe
