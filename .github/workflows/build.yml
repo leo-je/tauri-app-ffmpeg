@@ -56,7 +56,7 @@ jobs:
         run: |
           curl -L -o ffmpeg.zip https://evermeet.cx/ffmpeg/ffmpeg-118392-g0113e30806.zip
           7z x ffmpeg.zip -aoa -o"./ffmpeg-mac"
-          cp -r "./ffmpeg-mac" "./src-tauri/assets/mac/"
+          cp -r "./ffmpeg-mac/ffmpeg" "./src-tauri/assets/mac/"
 
       # 下载 ffmpeg    
       - name: dowm load ffmpeg for windows
