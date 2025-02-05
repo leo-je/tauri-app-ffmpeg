@@ -100,7 +100,7 @@ jobs:
         if: ${{ matrix.platform == 'macos-latest' &&  matrix.target == 'x86_64-apple-darwin'}}
         uses: actions/upload-artifact@v4
         with:
-          name: tauri-macos-dmg
+          name: tauri-macos-x86-dmg
           path: ${{ env.DMG_X86_FILE }}  # 你要上传的构建文件路径
 
       # 上传构建的可执行文件作为 Artifact（可选）
@@ -108,7 +108,7 @@ jobs:
         if: ${{ matrix.platform == 'macos-latest' &&  matrix.target == 'aarch64-apple-darwin'}}
         uses: actions/upload-artifact@v4
         with:
-          name: tauri-macos-dmg
+          name: tauri-macos-arm-dmg
           path: ${{ env.DMG_ARM_FILE }}  # 你要上传的构建文件路径
 
       # 上传构建的可执行文件作为 Artifact（可选）
@@ -128,7 +128,7 @@ jobs:
           path: ${{env.DMG_DEB_FILE}},${{env.DMG_RPM_FILE}}  # 你要上传的构建文件路径
 
       - name: Create GitHub Release
-        if: ${{ matrix.platform == 'macos-latest' }} && github.event_name == 'push'
+        if: github.event_name == 'push'
         uses: softprops/action-gh-release@v2 
         with:
           tag_name: v1.0.${{ github.run_number }}
