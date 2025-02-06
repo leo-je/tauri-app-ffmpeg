@@ -14,7 +14,7 @@
       </el-row>
 
       <el-form-item label="2.目标格式">
-        <el-select v-model="form.format" placeholder="请选择需要转换的格式" >
+        <el-select v-model="form.format" placeholder="请选择需要转换的格式">
           <el-option v-for="item in audioFormats" :key="item" :label="item" :value="item" />
         </el-select>
 
@@ -44,14 +44,21 @@
       </el-form-item>
       <div>
         <span>日志</span>
-        <el-input v-model="form.logs" type="textarea" :rows="8" />
+        <el-input :id="'textlog'" v-model="loginfo" :autosize="{ minRows: 10, maxRows: 10 }" :readonly="true"
+        type="textarea" placeholder @input="logChange" :input-style="{
+          'background-color': '#554a4a',
+          color: 'white',
+          'font-size': '14px',
+          'font-weight': '400',
+          'font-family': 'monospace'
+        }"></el-input>
       </div>
     </el-form>
   </div>
 </template>
 
 <script lang="ts" setup>
-import { reactive } from 'vue'
+import { reactive, ref } from 'vue'
 import { open } from '@tauri-apps/plugin-dialog';
 import { Command } from 'tauri-plugin-shellx-api';
 import { platform } from '@tauri-apps/plugin-os';
@@ -78,6 +85,8 @@ const audioFormats = [
   'mpa',
   'mpga',
 ]
+
+let loginfo = ref('')
 
 let filePath: any = null
 let format: any = null
@@ -127,30 +136,39 @@ const selectDirectory = async () => {
   form.outPath = dirPath
 }
 
-const log = (logInfo:string) => {
- form.logs += logInfo
+
+const logChange = () => {
+  let textarea = document.getElementById('textlog')
+  if (textarea) textarea.scrollTop = textarea.scrollHeight;
+
 }
 
-const logl = (logInfo:string) => {
- log(logInfo+'\n')
+
+const log = (logInfo: string) => {
+  loginfo.value += logInfo
+  logChange()
+}
+
+const logl = (logInfo: string) => {
+  log(logInfo + '\n')
 }
 const checkPlatform = () => {
   let currentPlatform = platform();
-  if (currentPlatform === 'windows') {
-    logl('当前操作系统是 Windows');
-  } else if (currentPlatform === 'macos') {
-    logl('当前操作系统是 macOS');
-  } else if (currentPlatform === 'linux') {
-    logl('当前操作系统是 Linux');
-  } else {
-    logl('未知操作系统：' + currentPlatform);
-  }
+  // if (currentPlatform === 'windows') {
+  //   logl('当前操作系统是 Windows');
+  // } else if (currentPlatform === 'macos') {
+  //   logl('当前操作系统是 macOS');
+  // } else if (currentPlatform === 'linux') {
+  //   logl('当前操作系统是 Linux');
+  // } else {
+  //   logl('未知操作系统：' + currentPlatform);
+  // }
   return currentPlatform;
 }
-const getSplit = ()=>{
-  if(checkPlatform() === 'windows'){
+const getSplit = () => {
+  if (checkPlatform() === 'windows') {
     return '\\';
-  }else{
+  } else {
     return '/';
   }
 }
@@ -164,17 +182,13 @@ const convert = async () => {
   let p5 = await path.resourceDir()
   form.isConverting = true;
   let platformName = checkPlatform();
+  logl('当前操作系统类型:' + platformName);
   console.log(form)
-  // this.$emit('convert', { format: this.format });
-  // ffmpeg -i 绣球圆缘音乐.wav -b:a 320k -ar 48000 绣球圆缘音乐.mp3
   let outFileName = form.filePath.split(getSplit()).pop() + '.' + form.format;
-  logl(outFileName);
+  logl('输出文件名：' + outFileName);
   let outPath = form.outPath + getSplit() + outFileName;
-  // let sh = `ffmpeg -i ${this.file} -b:a 320k -ar 48000 ${outPath}`;
-  // console.log();
-  // const cmd = Command.create('ffmpeg', ['-i', this.file,'-b:a 320k','-ar','48000' ,outPath])
   let macScript =
-`#! /bin/bash
+    `#! /bin/bash
 echo '开始转换...'
 # echo 'appLocalDataDir:${p}'
 # echo 'appDataDir:${p2}'
@@ -185,8 +199,8 @@ ${p5}/assets/mac/ffmpeg -y -i ${form.filePath} ${form.isAugment ? form.augment :
 echo '结束转换...'
 return $?
 `
-  let winScript = 
-`# 设置输出编码为 UTF-8
+  let winScript =
+    `# 设置输出编码为 UTF-8
 $OutputEncoding = [System.Text.Encoding]::UTF8
 chcp 65001
 @echo off
@@ -197,30 +211,31 @@ echo "结束转换..."
 `
 
 
-  logl(platformName == 'macos'?macScript:winScript);
+  // logl(platformName == 'macos' ? macScript : winScript);
   let command = null;
-  if(platformName == 'macos' || platformName == 'linux'){
+  if (platformName == 'macos' || platformName == 'linux') {
     command = Command.create('zsh', ['-c', macScript]);
-  }else{
+  } else {
     command = Command.create('powershell', ['-Command', winScript])
   }
   command.on('close', data => {
     logl(`command finished with code ${data.code} and signal ${data.signal}`)
     form.isConverting = false;
-    form.logs += 'end command!\n';
+    logl('end command!');
   });
   command.on('error', error => {
     console.error(`command on error: "${error}"`)
     form.isConverting = false;
-    form.logs += error + '\n';
+    logl(error)
   });
   command.stdout.on('data', line => {
     console.log(`command stdout: "${line}"`)
-    form.logs += line;
+    log(line)
   });
   command.stderr.on('data', line => {
     console.log(`command stderr: "${line}"`)
-    form.logs += line;
+    //form.logs += line;
+    log(line)
   });
 
   const child = await command.spawn();
