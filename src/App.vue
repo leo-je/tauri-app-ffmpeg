@@ -143,7 +143,7 @@ const logChange = () => {
 
 }
 
-watch(loginfo,(newValue, oldValue)=>{
+watch(loginfo,(_newValue, _oldValue)=>{
   logChange()
 })
 
