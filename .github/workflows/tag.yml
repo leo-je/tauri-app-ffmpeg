@@ -73,8 +73,10 @@ jobs:
           New-Item -Path ".\src-tauri\assets\win\ffmpeg" -ItemType Directory -Force
           7z x ffmpeg.zip -aoa -o"./ffmpeg"
           ls
-          Copy-Item -Path ".\ffmpeg\*" -Destination ".\src-tauri\assets\win\ffmpeg" -Recurse -Force
-          ls ".\src-tauri\assets\win"
+          Copy-Item -Path ".\ffmpeg\bin\*" -Destination ".\src-tauri\assets\win\ffmpeg" -Recurse -Force
+          Copy-Item -Path ".\ffmpeg\include\*" -Destination ".\src-tauri\assets\win\ffmpeg" -Recurse -Force
+          Copy-Item -Path ".\ffmpeg\lib\*" -Destination ".\src-tauri\assets\win\ffmpeg" -Recurse -Force
+          ls ".\src-tauri\assets\win\ffmpeg"
 
       - uses: tauri-apps/tauri-action@v0
         env:
