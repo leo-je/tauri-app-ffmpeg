@@ -147,6 +147,13 @@ const checkPlatform = () => {
   }
   return currentPlatform;
 }
+const getSplit = ()=>{
+  if(checkPlatform() === 'windows'){
+    return '\\';
+  }else{
+    return '/';
+  }
+}
 const convert = async () => {
   form.logs = ''
   setting();
@@ -160,9 +167,9 @@ const convert = async () => {
   console.log(form)
   // this.$emit('convert', { format: this.format });
   // ffmpeg -i 绣球圆缘音乐.wav -b:a 320k -ar 48000 绣球圆缘音乐.mp3
-  let outFileName = form.filePath.split('/').pop() + '.' + form.format;
+  let outFileName = form.filePath.split(getSplit()).pop() + '.' + form.format;
   logl(outFileName);
-  let outPath = form.outPath + '/' + outFileName;
+  let outPath = form.outPath + getSplit() + outFileName;
   // let sh = `ffmpeg -i ${this.file} -b:a 320k -ar 48000 ${outPath}`;
   // console.log();
   // const cmd = Command.create('ffmpeg', ['-i', this.file,'-b:a 320k','-ar','48000' ,outPath])
