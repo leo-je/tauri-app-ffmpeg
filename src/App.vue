@@ -187,7 +187,12 @@ ${p5}/assets/win/ffmpeg/bin/ffmpeg.exe -y -i ${form.filePath} ${form.isAugment ?
 echo 结束转换...
 `
   logl(platformName == 'macos'?macScript:winScript);
-  const command = Command.create('zsh', ['-c', macScript]);
+  let command = null;
+  if(platformName == 'macos'){
+    command = Command.create('zsh', ['-c', macScript]);
+  }else{
+    command = Command.create('powershell', ['/c', winScript]);
+  }
   command.on('close', data => {
     logl(`command finished with code ${data.code} and signal ${data.signal}`)
     form.isConverting = false;
