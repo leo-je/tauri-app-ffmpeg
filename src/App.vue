@@ -126,16 +126,21 @@ const selectDirectory = async () => {
   console.log(dirPath);
   form.outPath = dirPath
 }
+
+const log = (logInfo) => {
+ form.logs += logInfo
+}
+
 const checkPlatform = () => {
   let currentPlatform = platform();
   if (currentPlatform === 'windows') {
-    console.log('当前操作系统是 Windows');
+    log('当前操作系统是 Windows');
   } else if (currentPlatform === 'macos') {
-    console.log('当前操作系统是 macOS');
+    log('当前操作系统是 macOS');
   } else if (currentPlatform === 'linux') {
-    console.log('当前操作系统是 Linux');
+    log('当前操作系统是 Linux');
   } else {
-    console.log('未知操作系统：' + currentPlatform);
+    log('未知操作系统：' + currentPlatform);
   }
   return currentPlatform;
 }
@@ -153,7 +158,7 @@ const convert = async () => {
   // this.$emit('convert', { format: this.format });
   // ffmpeg -i 绣球圆缘音乐.wav -b:a 320k -ar 48000 绣球圆缘音乐.mp3
   let outFileName = form.filePath.split('/').pop() + '.' + form.format;
-  console.log(outFileName);
+  log(outFileName);
   let outPath = form.outPath + '/' + outFileName;
   // let sh = `ffmpeg -i ${this.file} -b:a 320k -ar 48000 ${outPath}`;
   // console.log();
@@ -178,10 +183,10 @@ echo 'resourceDir:${p5}'
 ${p5}/assets/win/ffmpeg/bin/ffmpeg.exe -y -i ${form.filePath} ${form.isAugment ? form.augment : ''} ${outPath}
 echo 结束转换...
 `
-  console.log(platformName == 'macos'?macScript:winScript);
+  log(platformName == 'macos'?macScript:winScript);
   const command = Command.create('zsh', ['-c', macScript]);
   command.on('close', data => {
-    console.log(`command finished with code ${data.code} and signal ${data.signal}`)
+    log(`command finished with code ${data.code} and signal ${data.signal}`)
     form.isConverting = false;
     form.logs += 'end command!\n';
   });
