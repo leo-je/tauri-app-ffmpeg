@@ -73,9 +73,7 @@ jobs:
           New-Item -Path ".\src-tauri\assets\win\ffmpeg" -ItemType Directory -Force
           7z x ffmpeg.zip -aoa -o".\ffmpeg"
           ls ".\ffmpeg"
-          Copy-Item -Path ".\ffmpeg\ffmpeg-master-latest-win64-gpl-shared\bin\*" -Destination ".\src-tauri\assets\win\ffmpeg" -Recurse -Force
-          Copy-Item -Path ".\ffmpeg\ffmpeg-master-latest-win64-gpl-shared\include\*" -Destination ".\src-tauri\assets\win\ffmpeg" -Recurse -Force
-          Copy-Item -Path ".\ffmpeg\ffmpeg-master-latest-win64-gpl-shared\lib\*" -Destination ".\src-tauri\assets\win\ffmpeg" -Recurse -Force
+          Copy-Item -Path ".\ffmpeg\ffmpeg-master-latest-win64-gpl-shared\*" -Destination ".\src-tauri\assets\win\ffmpeg" -Recurse -Force
           ls ".\src-tauri\assets\win\ffmpeg"
 
       - uses: tauri-apps/tauri-action@v0
