@@ -207,7 +207,6 @@ return $?
     `# 设置输出编码为 UTF-8
 $OutputEncoding = [System.Text.Encoding]::UTF8
 chcp 65001
-@echo off
 echo "开始转换..."
 echo 'resourceDir:${p5}'
 ${p5}/assets/win/ffmpeg/bin/ffmpeg.exe -y -i ${form.filePath} ${form.isAugment ? form.augment : ''} ${outPath}
