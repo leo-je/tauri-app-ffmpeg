@@ -187,16 +187,10 @@ return $?
 `
   let winScript = 
 `
-Write-Host "开始转换..."
+Write-Host "\`开始转换...\`"
 Write-Host 'resourceDir:${p5}'
-
-# 设置 FFmpeg 路径
 $ffmpegPath = "${p5}/assets/win/ffmpeg/bin/ffmpeg.exe"
-
-# 执行命令
-Start-Process -FilePath $ffmpegPath -ArgumentList -i ${form.filePath} ${form.isAugment ? form.augment : ''} ${outPath} -Wait
-
-# 打印完成信息
+Start-Process -FilePath $ffmpegPath -ArgumentList "-i \`${form.filePath}\` ${form.isAugment ? form.augment : ''} \`${outPath}\`" -Wait
 Write-Host "FFmpeg processing complete"
 `
 
