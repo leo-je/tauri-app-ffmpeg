@@ -132,7 +132,7 @@ const log = (logInfo:string) => {
 }
 
 const logl = (logInfo:string) => {
- form.logs += logInfo+'\n'
+ form.logs += log(logInfo+'\n')
 }
 const checkPlatform = () => {
   let currentPlatform = platform();
