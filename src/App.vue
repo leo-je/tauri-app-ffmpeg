@@ -187,12 +187,20 @@ return $?
 `
   let winScript = 
 `
-@echo off
-echo 开始转换...
-echo 'resourceDir:${p5}'
-${p5}/assets/win/ffmpeg/bin/ffmpeg.exe -y -i ${form.filePath} ${form.isAugment ? form.augment : ''} ${outPath}
-echo 结束转换...
+Write-Host "开始转换..."
+Write-Host 'resourceDir:${p5}'
+
+# 设置 FFmpeg 路径
+$ffmpegPath = "${p5}/assets/win/ffmpeg/bin/ffmpeg.exe"
+
+# 执行命令
+Start-Process -FilePath $ffmpegPath -ArgumentList -i ${form.filePath} ${form.isAugment ? form.augment : ''} ${outPath} -Wait
+
+# 打印完成信息
+Write-Host "FFmpeg processing complete"
 `
+
+
   logl(platformName == 'macos'?macScript:winScript);
   let command = null;
   if(platformName == 'macos' || platformName == 'linux'){
