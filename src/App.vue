@@ -132,7 +132,7 @@ const log = (logInfo:string) => {
 }
 
 const logl = (logInfo:string) => {
- form.logs += log(logInfo+'\n')
+ log(logInfo+'\n')
 }
 const checkPlatform = () => {
   let currentPlatform = platform();
@@ -191,7 +191,7 @@ echo 结束转换...
   if(platformName == 'macos'){
     command = Command.create('zsh', ['-c', macScript]);
   }else{
-    command = Command.create('powershell', ['/c', winScript]);
+    command = Command.create('cmd', ['/c', winScript]);
   }
   command.on('close', data => {
     logl(`command finished with code ${data.code} and signal ${data.signal}`)
