@@ -73,7 +73,7 @@ jobs:
           New-Item -Path "./src-tauri/assets/win/ffmpeg" -ItemType Directory -Force
           7z x ffmpeg.zip -aoa -o"./ffmpeg"
           ls
-          Move-Item -Path ".\ffmpeg\*" -Destination ".\src-tauri\assets\win\ffmpeg" -Recurse -Force
+          Copy-Item -Path ".\ffmpeg\*" -Destination ".\src-tauri\assets\win\ffmpeg" -Recurse -Force
 
 
       - uses: tauri-apps/tauri-action@v0
