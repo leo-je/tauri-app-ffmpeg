@@ -188,10 +188,10 @@ echo 结束转换...
 `
   logl(platformName == 'macos'?macScript:winScript);
   let command = null;
-  if(platformName == 'macos'){
+  if(platformName == 'macos' || platformName == 'linux'){
     command = Command.create('zsh', ['-c', macScript]);
   }else{
-    command = Command.create('cmd', ['/c', winScript]);
+    command = Command.create('powershell', ['-Command', winScript])
   }
   command.on('close', data => {
     logl(`command finished with code ${data.code} and signal ${data.signal}`)
