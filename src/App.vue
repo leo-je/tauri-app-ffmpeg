@@ -189,10 +189,10 @@ return $?
 `# 设置输出编码为 UTF-8
 $OutputEncoding = [System.Text.Encoding]::UTF8
 chcp 65001
-Write-Host "\`开始转换...\`"
+Write-Host "开始转换..."
 Write-Host 'resourceDir:${p5}'
 $ffmpegPath = "${p5}/assets/win/ffmpeg/bin/ffmpeg.exe"
-Start-Process -FilePath $ffmpegPath -ArgumentList "-i \`${form.filePath}\` ${form.isAugment ? form.augment : ''} \`${outPath}\`" -Wait
+Start-Process -FilePath $ffmpegPath -ArgumentList "-i ${form.filePath} ${form.isAugment ? form.augment : ''} ${outPath}" -Wait
 Write-Host "FFmpeg processing complete"
 `
 
