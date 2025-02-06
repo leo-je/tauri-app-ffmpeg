@@ -45,7 +45,7 @@
       <div>
         <span>日志</span>
         <el-input :id="'textlog'" v-model="loginfo" :autosize="{ minRows: 10, maxRows: 10 }" :readonly="true"
-        type="textarea" placeholder @input="logChange" :input-style="{
+        type="textarea" placeholder :input-style="{
           'background-color': '#554a4a',
           color: 'white',
           'font-size': '14px',
@@ -58,7 +58,7 @@
 </template>
 
 <script lang="ts" setup>
-import { reactive, ref } from 'vue'
+import { reactive, ref, watch } from 'vue'
 import { open } from '@tauri-apps/plugin-dialog';
 import { Command } from 'tauri-plugin-shellx-api';
 import { platform } from '@tauri-apps/plugin-os';
@@ -143,10 +143,14 @@ const logChange = () => {
 
 }
 
+watch(loginfo,(newValue, oldValue)=>{
+  logChange()
+})
+
 
 const log = (logInfo: string) => {
   loginfo.value += logInfo
-  logChange()
+  //logChange()
 }
 
 const logl = (logInfo: string) => {
