@@ -127,7 +127,7 @@ const selectDirectory = async () => {
   form.outPath = dirPath
 }
 
-const log = (logInfo) => {
+const log = (logInfo:string) => {
  form.logs += logInfo
 }
 
