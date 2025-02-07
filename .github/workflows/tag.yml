@@ -105,7 +105,9 @@ jobs:
           Copy-Item -Path ".\ffmpeg\ffmpeg-master-latest-win64-gpl-shared\*" -Destination ".\src-tauri\assets\win\ffmpeg" -Recurse -Force
           ls ".\src-tauri\assets\win\ffmpeg"
 
-      - uses: tauri-apps/tauri-action@v0
+      - name: Create GitHub Release for macos
+        uses: tauri-apps/tauri-action@v0
+        if: ${{ matrix.platform == 'macos-latest' }}
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
@@ -117,4 +119,21 @@ jobs:
           # releaseBody: 'tag: v${{ needs.get_version.outputs.version }}. ${{ github.event.head_commit.message }}.'
           releaseDraft: false
           prerelease: ${{ needs.get_version.outputs.prerelease }}
-          args: ${{ matrix.args }} --config '{"version":"${{ needs.get_version.outputs.version_number }}"}'
+          args: ${{ matrix.args }} --config '{"version":"${{ needs.get_version.outputs.version }}"}'
+
+
+      - name: Create GitHub Release for windows
+        uses: tauri-apps/tauri-action@v0
+        if: ${{ matrix.platform == 'windows-latest' }}
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          tagName: app-v__VERSION__ # the action automatically replaces \_\_VERSION\_\_ with the app version.
+          # tagName: app-v${{ needs.get_version.outputs.version }}
+          releaseName: 'App version v__VERSION__'
+          # releaseName: 'App version v${{ needs.get_version.outputs.version }}'
+          releaseBody: 'tag:v.__VERSION__. ${{ github.event.head_commit.message }}.'
+          # releaseBody: 'tag: v${{ needs.get_version.outputs.version }}. ${{ github.event.head_commit.message }}.'
+          releaseDraft: false
+          prerelease: true
+          args: ${{ matrix.args }} --config '{"version":"${{ needs.get_version.outputs.version_number }}.${{needs.get_version.outputs.prerelease}}"}'
