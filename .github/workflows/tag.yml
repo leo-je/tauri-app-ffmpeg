@@ -16,7 +16,7 @@ jobs:
     outputs:
       version: ${{ steps.get_version.outputs.VERSION }}
       version_number: ${{ steps.get_version.outputs.VERSION_NUMBER }}
-      prerelease: ${{ steps.get_version.outputs.PRE_RELEASE }}
+      prerelease: ${{ steps.get_version.outputs.PRERELEASE }}
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
