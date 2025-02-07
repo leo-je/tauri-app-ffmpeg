@@ -15,6 +15,8 @@ jobs:
     runs-on: ubuntu-latest
     outputs:
       version: ${{ steps.get_version.outputs.VERSION }}
+      version_number: ${{ steps.get_version.outputs.VERSION_NUMBER }}
+      prerelease: ${{ steps.get_version.outputs.PRE_RELEASE }}
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
@@ -28,8 +30,14 @@ jobs:
             VERSION="0.1.${{ github.run_number }}"
           fi
           echo $VERSION
+          # 提取版本号 (去掉 -build.xxx)
+          VERSION_NUMBER=${VERSION%-*}
+          # 提取 pre-release 号 (取最后一部分)
+          PRERELEASE=${VERSION##*.}
           echo "VERSION=$VERSION" >> $GITHUB_ENV
           echo "VERSION=$VERSION" >> $GITHUB_OUTPUT
+          echo "VERSION_NUMBER=$VERSION_NUMBER" >> $GITHUB_OUTPUT
+          echo "PRERELEASE=$PRERELEASE" >> $GITHUB_OUTPUT
 
   publish-tauri:
     needs: get_version
@@ -108,5 +116,5 @@ jobs:
           releaseBody: 'tag:v.__VERSION__. ${{ github.event.head_commit.message }}.'
           # releaseBody: 'tag: v${{ needs.get_version.outputs.version }}. ${{ github.event.head_commit.message }}.'
           releaseDraft: false
-          prerelease: false
-          args: ${{ matrix.args }} --config '{"version":"${{ needs.get_version.outputs.version }}"}'
+          prerelease: ${{ needs.get_version.outputs.prerelease }}
+          args: ${{ matrix.args }} --config '{"version":"${{ needs.get_version.outputs.version_number }}"}'
