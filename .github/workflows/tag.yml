@@ -135,5 +135,5 @@ jobs:
           releaseBody: 'tag:v.__VERSION__. ${{ github.event.head_commit.message }}.'
           # releaseBody: 'tag: v${{ needs.get_version.outputs.version }}. ${{ github.event.head_commit.message }}.'
           releaseDraft: false
-          prerelease: true
+          prerelease: false
           args: ${{ matrix.args }} --config '{"version":"${{ needs.get_version.outputs.version_number }}.${{needs.get_version.outputs.prerelease}}"}'
