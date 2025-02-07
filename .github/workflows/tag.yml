@@ -107,4 +107,4 @@ jobs:
           releaseBody: 'tag:${{ github.ref }}. ${{ github.event.head_commit.message }}.'
           releaseDraft: false
           prerelease: false
-          args: ${{ matrix.args }} --version v0.0.1
+          args: ${{ matrix.args }} --config '{"version": "${{env.VERSION}}"}'
