@@ -109,12 +109,12 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          tagName: app-v__VERSION__ # the action automatically replaces \_\_VERSION\_\_ with the app version.
-          # tagName: app-v${{ needs.get_version.outputs.version }}
-          releaseName: 'App version v__VERSION__'
-          # releaseName: 'App version v${{ needs.get_version.outputs.version }}'
-          releaseBody: 'tag:v.__VERSION__. ${{ github.event.head_commit.message }}.'
-          # releaseBody: 'tag: v${{ needs.get_version.outputs.version }}. ${{ github.event.head_commit.message }}.'
+          # tagName: app-v__VERSION__ # the action automatically replaces \_\_VERSION\_\_ with the app version.
+          tagName: app-v${{ needs.get_version.outputs.version }}
+          # releaseName: 'App version v__VERSION__'
+          releaseName: 'App version v${{ needs.get_version.outputs.version }}'
+          # releaseBody: 'tag:v.__VERSION__. ${{ github.event.head_commit.message }}.'
+          releaseBody: 'tag: v${{ needs.get_version.outputs.version }}. ${{ github.event.head_commit.message }}.'
           releaseDraft: false
           prerelease: false
           args: ${{ matrix.args }} --config '{"version":"${{matrix.platform == 'windows-latest' && needs.get_version.outputs.windows_version || needs.get_version.outputs.version}}"}'
