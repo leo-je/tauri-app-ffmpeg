@@ -35,7 +35,7 @@
         </el-col>
         <el-col :span="1"></el-col>
         <el-col :span="3"><el-button type="primary" @click="selectDirectory">选择</el-button></el-col>
-        <el-col :span="2"></el-col>
+        <el-col :span="2"><el-button type="primary" @click="openDir">打开</el-button></el-col>
       </el-row>
 
       <el-form-item>
@@ -45,13 +45,13 @@
       <div>
         <span>日志</span>
         <el-input :id="'textlog'" v-model="loginfo" :autosize="{ minRows: 10, maxRows: 10 }" :readonly="true"
-        type="textarea" placeholder :input-style="{
-          'background-color': '#554a4a',
-          color: 'white',
-          'font-size': '14px',
-          'font-weight': '400',
-          'font-family': 'monospace'
-        }"></el-input>
+          type="textarea" placeholder :input-style="{
+            'background-color': '#554a4a',
+            color: 'white',
+            'font-size': '14px',
+            'font-weight': '400',
+            'font-family': 'monospace'
+          }"></el-input>
       </div>
     </el-form>
   </div>
@@ -132,8 +132,15 @@ const selectDirectory = async () => {
     multiple: false,
     directory: true,
   })
-  console.log(dirPath);
-  form.outPath = dirPath
+  if (dirPath && dirPath.length !== 0) {
+    form.outPath = dirPath
+    logl('选择输出路径:' + dirPath);
+  }
+}
+
+const openDir = () => {
+  let osType = checkPlatform()
+  new Command(osType === 'windows' ? 'explorer' : 'open', [form.outPath]).execute()
 }
 
 
@@ -143,7 +150,7 @@ const logChange = () => {
 
 }
 
-watch(loginfo,(_newValue, _oldValue)=>{
+watch(loginfo, (_newValue, _oldValue) => {
   logChange()
 })
 
