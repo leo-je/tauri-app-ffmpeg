@@ -105,7 +105,6 @@ jobs:
 
       - name: Create GitHub Release for macos
         uses: tauri-apps/tauri-action@v0
-        if: ${{ matrix.platform == 'macos-latest' }}
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
