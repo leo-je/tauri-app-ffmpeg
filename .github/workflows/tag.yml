@@ -110,4 +110,4 @@ jobs:
           releaseBody: 'tag:${{ github.ref }}. ${{ github.event.head_commit.message }}.'
           releaseDraft: false
           prerelease: false
-          args: ${{ matrix.args }} --config '{"version":"${{ needs.get_tag.outputs.VERSION }}"}'
+          args: ${{ matrix.args }} --config '{"version":"${{ needs.get_version.outputs.VERSION }}"}'
