@@ -15,8 +15,7 @@ jobs:
     runs-on: ubuntu-latest
     outputs:
       version: ${{ steps.get_version.outputs.VERSION }}
-      version_number: ${{ steps.get_version.outputs.VERSION_NUMBER }}
-      prerelease: ${{ steps.get_version.outputs.PRERELEASE }}
+      windows_version: ${{ steps.get_version.outputs.WINDOWSVERSION }}
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
@@ -34,10 +33,9 @@ jobs:
           VERSION_NUMBER=${VERSION%-*}
           # 提取 pre-release 号 (取最后一部分)
           PRERELEASE=${VERSION##*.}
-          echo "VERSION=$VERSION" >> $GITHUB_ENV
+          WINDOWSVERSION="$VERSION_NUMBER-$PRERELEASE"
           echo "VERSION=$VERSION" >> $GITHUB_OUTPUT
-          echo "VERSION_NUMBER=$VERSION_NUMBER" >> $GITHUB_OUTPUT
-          echo "PRERELEASE=$PRERELEASE" >> $GITHUB_OUTPUT
+          echo "WINDOWSVERSION=$WINDOWSVERSION" >> $GITHUB_OUTPUT
 
   publish-tauri:
     needs: get_version
@@ -119,21 +117,5 @@ jobs:
           # releaseBody: 'tag: v${{ needs.get_version.outputs.version }}. ${{ github.event.head_commit.message }}.'
           releaseDraft: false
           prerelease: false
-          args: ${{ matrix.args }} --config '{"version":"${{ needs.get_version.outputs.version }}"}'
-
-
-      - name: Create GitHub Release for windows
-        uses: tauri-apps/tauri-action@v0
-        if: ${{ matrix.platform == 'windows-latest' }}
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          # tagName: app-v__VERSION__ # the action automatically replaces \_\_VERSION\_\_ with the app version.
-          tagName: app-v${{ needs.get_version.outputs.version }}
-          # releaseName: 'App version v__VERSION__'
-          releaseName: 'App version v${{ needs.get_version.outputs.version }}'
-          # releaseBody: 'tag:v.__VERSION__. ${{ github.event.head_commit.message }}.'
-          releaseBody: 'tag: v${{ needs.get_version.outputs.version }}. ${{ github.event.head_commit.message }}.'
-          releaseDraft: false
-          prerelease: false
-          args: ${{ matrix.args }} --config '{"version":"${{ needs.get_version.outputs.version_number }}-${{needs.get_version.outputs.prerelease}}"}'
+          args: ${{ matrix.args }} --config '{"version":"${{matrix.platform == 'windows-latest' && needs.get_version.outputs.windows_version || needs.get_version.outputs.version}}"}'
+          
