@@ -11,6 +11,23 @@ on:
                 default: 'template'
  
 jobs:
+  get-version:
+    runs-on: ubuntu-latest
+    steps:
+
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Get version number
+        id: version
+        run: |
+          if [[ $GITHUB_REF == refs/tags/* ]]; then
+            VERSION=${GITHUB_REF#refs/tags/}
+          else
+            VERSION="0.1.${{ github.run_number }}"
+          fi
+          echo "VERSION=$VERSION" >> $GITHUB_ENV
+
   publish-tauri:
     permissions:
       contents: write
@@ -89,4 +106,4 @@ jobs:
           releaseBody: 'tag:${{ github.ref }}. ${{ github.event.head_commit.message }}.'
           releaseDraft: false
           prerelease: false
-          args: ${{ matrix.args }},"--version ${{github.ref}}"
+          args: ${{ matrix.args }},"--version ${{env.VERSION}}"
