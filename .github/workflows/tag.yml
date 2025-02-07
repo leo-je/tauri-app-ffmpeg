@@ -11,8 +11,10 @@ on:
                 default: 'template'
  
 jobs:
-  get-version:
+  get_version:
     runs-on: ubuntu-latest
+    outputs:
+      tag: ${{ steps.get_version.outputs.VERSION }}
     steps:
 
       - name: Checkout code
@@ -27,9 +29,10 @@ jobs:
             VERSION="0.1.${{ github.run_number }}"
           fi
           echo $VERSION
-          echo "VERSION=$VERSION" >> $GITHUB_ENV
+          echo "VERSION=$VERSION" >> $GITHUB_ENV && echo "::set-output name=VERSION::$VERSION"
 
   publish-tauri:
+    needs: get_version
     permissions:
       contents: write
     strategy:
@@ -107,4 +110,4 @@ jobs:
           releaseBody: 'tag:${{ github.ref }}. ${{ github.event.head_commit.message }}.'
           releaseDraft: false
           prerelease: false
-          args: ${{ matrix.args }} --config '{"version":"${{env.VERSION}}"}'
+          args: ${{ matrix.args }} --config '{"version":"${{ needs.get_tag.outputs.VERSION }}"}'
