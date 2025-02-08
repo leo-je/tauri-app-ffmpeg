@@ -118,7 +118,7 @@ jobs:
           # releaseName: 'App version v__VERSION__'
           releaseName: 'App version v${{ needs.get_version.outputs.version }}'
           # releaseBody: 'tag:v.__VERSION__. ${{ github.event.head_commit.message }}.'
-          releaseBody: 'tag: v${{ needs.get_version.outputs.version }}. ${{ github.event.head_commit.message }},,build number ${{ github.run_number }},time: ${{ needs.get_version.outputs.current_datetime }}'
+          releaseBody: 'tag: v${{ needs.get_version.outputs.version }}. ${{ github.event.head_commit.message }},build number ${{ github.run_number }},time: ${{ needs.get_version.outputs.current_datetime }}'
           releaseDraft: false
           prerelease: false
           args: ${{ matrix.args }} --config '{"version":"${{matrix.platform == 'windows-latest' && needs.get_version.outputs.windows_version || needs.get_version.outputs.version}}"}'
