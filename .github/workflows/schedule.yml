@@ -117,9 +117,9 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           # tagName: app-v__VERSION__ # the action automatically replaces \_\_VERSION\_\_ with the app version.
-          tagName: app-${{github.event_name == 'schedule' && 'schedule-main'||'main'}}-v${{ needs.get_version.outputs.version }}.${{github.run_number}}
+          tagName: app-${{github.event_name == 'schedule' && 'schedule-main'||'main'}}-v${{ needs.get_version.outputs.version }}-${{github.run_number}}
           # releaseName: 'App version v__VERSION__'
-          releaseName: 'App version ${{github.event_name}} v${{ needs.get_version.outputs.version }}.${{github.run_number}}'
+          releaseName: 'App version ${{github.event_name}} v${{ needs.get_version.outputs.version }}-${{github.run_number}}'
           # releaseBody: 'tag:v.__VERSION__. ${{ github.event.head_commit.message }}.'
           releaseBody: 'version v${{ needs.get_version.outputs.version }} by ${{github.event_name}} ${{ github.event.head_commit.message }},build number ${{ github.run_number }},time: ${{ needs.get_version.outputs.current_datetime }}'
           releaseDraft: false
