@@ -49,7 +49,7 @@ jobs:
 
       - name: Release Tag
         env:
-            GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         # You may pin to the exact commit or the version.
         # uses: Akryum/release-tag@01f55b5917052ed0c91be13abdb7a23ccd103d90
         uses: Akryum/release-tag@v4.0.3
