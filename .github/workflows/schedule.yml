@@ -25,9 +25,12 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
+        with:
+          ref: main
 
       - name: 获取最后一次 commit 内容
-        run: echo "LAST_COMMIT_MSG=$(git log -1 --pretty=format:'%s')" >> $GITHUB_OUTPUT
+        run: |
+          echo "echo "LAST_COMMIT_INFO=$(git log -1 --pretty=format:'%an: %s ')" >> $GITHUB_OUTPUT
 
       - name: 读取 package.json 版本号
         id: get_version
