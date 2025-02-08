@@ -54,7 +54,7 @@ jobs:
           echo "releaseName:$releaseName" >> $GITHUB_OUTPUT
           gh release create "$TAG" --target "main" --title "$releaseName" --notes "$releaseBody"
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_TOKEN: ${{ github.token }}
 
   publish-tauri:
     needs: get_version
