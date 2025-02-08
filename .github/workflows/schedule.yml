@@ -43,6 +43,10 @@ jobs:
           LAST_COMMIT_INFO=$(git log -1 --pretty=format:'%an: %s ')
           echo "$LAST_COMMIT_INFO"
           echo "LAST_COMMIT_INFO=$LAST_COMMIT_INFO" >> $GITHUB_OUTPUT
+
+      - name: Create GitHub Release
+        id: crreate_release
+        run: |
           TAG="app-${{github.event_name == 'schedule' && 'schedule-main'||'main'}}-v$VERSION-${{github.run_number}}"
           echo "TAG=$TAG" >> $GITHUB_OUTPUT
           echo "Tag:$TAG"
