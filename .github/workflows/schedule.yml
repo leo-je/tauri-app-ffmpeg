@@ -21,9 +21,13 @@ jobs:
       windows_version: ${{ steps.get_version.outputs.WINDOWSVERSION }}
       current_datetime: ${{ steps.get_version.outputs.CURRENT_DATETIME }}
       macos_version: ${{ steps.get_version.outputs.MACOSVERSION }}
+      last_commit_msg: ${{ steps.get_version.outputs.LAST_COMMIT_MSG }}
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
+
+      - name: 获取最后一次 commit 内容
+        run: echo "LAST_COMMIT_MSG=$(git log -1 --pretty=format:'%s')" >> $GITHUB_OUTPUT
 
       - name: 读取 package.json 版本号
         id: get_version
@@ -110,7 +114,7 @@ jobs:
           # releaseName: 'App version v__VERSION__'
           releaseName: 'App version ${{github.event_name}} v${{ needs.get_version.outputs.version }}-${{github.run_number}}'
           # releaseBody: 'tag:v.__VERSION__. ${{ github.event.head_commit.message }}.'
-          releaseBody: 'version v${{ needs.get_version.outputs.version }} by ${{github.event_name}} ${{ github.event.head_commit.message }},build number ${{ github.run_number }},time: ${{ needs.get_version.outputs.current_datetime }}'
+          releaseBody: 'version v${{ needs.get_version.outputs.version }} by ${{github.event_name}} commit:${{ needs.get_version.outputs.last_commit_msg }},build number ${{ github.run_number }},time: ${{ needs.get_version.outputs.current_datetime }}'
           releaseDraft: false
           prerelease: false
           args: ${{ matrix.args }} --config '{"version":"${{matrix.platform == 'windows-latest' && needs.get_version.outputs.windows_version || needs.get_version.outputs.macos_version}}"}'
