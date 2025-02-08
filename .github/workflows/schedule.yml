@@ -44,9 +44,11 @@ jobs:
           echo "MACOSVERSION=$(jq -r '.version' package.json)-${{github.run_number}}" >> $GITHUB_OUTPUT
           CURRENT_DATETIME=$(date +"%Y%m%d %H:%M:%S")
           echo "CURRENT_DATETIME=$CURRENT_DATETIME" >> $GITHUB_OUTPUT
-          TAG="app-${{github.event_name == 'schedule' && 'schedule-main'||'main'}}-v$VERSION-${{github.run_number}}"
+          TAG="app-${{github.event_name == 'schedule' && 'schedule-main'||'main'}}-v$(jq -r '.version' package.json)-${{github.run_number}}"
           echo "TAG=$TAG" >> $GITHUB_OUTPUT
           echo "创建Tag:$TAG"
+          git config user.name "GitHub Actions"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
           git tag $TAG
           echo "Created new tag: $TAG"
           git push origin --tags
