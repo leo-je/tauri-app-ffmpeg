@@ -24,6 +24,7 @@ jobs:
       last_commit_msg: ${{ steps.get_version.outputs.LAST_COMMIT_INFO }}
       tagName: ${{ steps.get_version.outputs.TAG }}
       releaseBody: ${{ steps.get_version.outputs.releaseBody }}
+      releaseName: ${{ steps.get_version.outputs.releaseName }}
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
@@ -48,8 +49,10 @@ jobs:
           releaseBody="version v$VERSION by ${{github.event_name}} commit:$LAST_COMMIT_INFO,build number ${{ github.run_number }},time: $CURRENT_DATETIME"
           echo "releaseBody:$releaseBody"
           echo "releaseBody:$releaseBody" >> $GITHUB_OUTPUT
-          gh release create "$TAG" --target "main" --title "$releaseBody"
-
+          releaseName="App version ${{github.event_name}} v$VERSION-${{github.run_number}}"
+          echo "releaseName:$releaseName"
+          echo "releaseName:$releaseName" >> $GITHUB_OUTPUT
+          gh release create "$TAG" --target "main" --title "$releaseName" --notes "$releaseBody"
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
@@ -128,7 +131,7 @@ jobs:
           # tagName: app-${{github.event_name == 'schedule' && 'schedule-main'||'main'}}-v${{ needs.get_version.outputs.version }}-${{github.run_number}}
           tagName: ${{needs.get_version.outputs.tagName}}
           # releaseName: 'App version v__VERSION__'
-          releaseName: 'App version ${{github.event_name}} v${{ needs.get_version.outputs.version }}-${{github.run_number}}'
+          releaseName: ${{needs.get_version.outputs.releaseName}}
           # releaseBody: 'tag:v.__VERSION__. ${{ github.event.head_commit.message }}.'
           releaseBody: ${{needs.get_version.outputs.releaseBody}}
           releaseDraft: false
