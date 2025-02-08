@@ -23,8 +23,8 @@ jobs:
       macos_version: ${{ steps.get_version.outputs.MACOSVERSION }}
       last_commit_msg: ${{ steps.get_version.outputs.LAST_COMMIT_INFO }}
       tagName: ${{ steps.get_version.outputs.TAG }}
-      releaseBody: ${{ steps.get_version.outputs.RELEASEBODY }}
-      releaseName: ${{ steps.get_version.outputs.RELEASENAME }}
+      releaseBody: ${{ steps.get_version.outputs.RELEASE_BODY }}
+      releaseName: ${{ steps.get_version.outputs.RELEASE_NAME }}
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
@@ -48,10 +48,10 @@ jobs:
           echo "Tag:$TAG"
           RELEASEBODY="version v$VERSION by ${{github.event_name}} commit:$LAST_COMMIT_INFO,build number ${{ github.run_number }},time: $CURRENT_DATETIME"
           echo "RELEASEBODY: $RELEASEBODY"
-          echo "RELEASEBODY:$RELEASEBODY" >> $GITHUB_OUTPUT
+          echo "RELEASE_BODY:$RELEASEBODY" >> $GITHUB_OUTPUT
           RELEASENAME="App version ${{github.event_name}} v$VERSION-${{github.run_number}}"
           echo "RELEASENAME: $RELEASENAME"
-          echo "RELEASENAME:$RELEASENAME" >> $GITHUB_OUTPUT
+          echo "RELEASE_NAME:$RELEASENAME" >> $GITHUB_OUTPUT
           gh release create "$TAG" --target "main" --title "$RELEASENAME" --notes "$RELEASEBODY"
         env:
           GITHUB_TOKEN: ${{ github.token }}
