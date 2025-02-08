@@ -48,10 +48,14 @@
         <el-col :span="1"></el-col>
       </el-row>
 
-      <el-form-item>
-        <el-button :disabled="(!form.filePath || !form.outPath || !form.format) || form.isConverting" type="primary"
-          @click="convert">转换</el-button>
-      </el-form-item>
+      <el-row style="margin-top: 30px;">
+        <el-col :span="11"></el-col>
+        <el-col :span="8">
+          <el-button :disabled="(!form.filePath || !form.outPath || !form.format) || form.isConverting" type="success"
+            @click="convert">{{ form.isConverting?'转换中...':'开始转换' }}</el-button>
+        </el-col>
+      </el-row>
+
       <div>
         <span>日志</span>
         <el-row style="margin-top: 10px;">
@@ -272,5 +276,6 @@ echo "结束转换..."
 <style>
 .app {
   width: 100%;
+  margin-top: 50px;
 }
 </style>
