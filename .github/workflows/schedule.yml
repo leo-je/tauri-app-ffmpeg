@@ -21,7 +21,7 @@ jobs:
       windows_version: ${{ steps.get_version.outputs.WINDOWSVERSION }}
       current_datetime: ${{ steps.get_version.outputs.CURRENT_DATETIME }}
       macos_version: ${{ steps.get_version.outputs.MACOSVERSION }}
-      last_commit_msg: ${{ steps.get_version.outputs.LAST_COMMIT_MSG }}
+      last_commit_msg: ${{ steps.get_version.outputs.LAST_COMMIT_INFO }}
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
