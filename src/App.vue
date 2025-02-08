@@ -13,18 +13,27 @@
         <el-col :span="2"></el-col>
       </el-row>
 
-      <el-form-item label="2.目标格式">
-        <el-select v-model="form.format" placeholder="请选择需要转换的格式">
-          <el-option v-for="item in audioFormats" :key="item" :label="item" :value="item" />
-        </el-select>
+      <el-row>
+        <el-col :span="18">
+          <el-form-item label="2.目标格式">
+            <el-select v-model="form.format" placeholder="请选择需要转换的格式">
+              <el-option v-for="item in audioFormats" :key="item" :label="item" :value="item" />
+            </el-select>
+          </el-form-item>
+        </el-col>
+      </el-row>
 
-      </el-form-item>
       <el-form-item label="3.转换参数">
         <el-switch v-model="form.isAugment" />
       </el-form-item>
-      <el-form-item label="">
-        <el-input :disabled="!form.isAugment" v-model="form.augment" />
-      </el-form-item>
+      <el-row>
+        <el-col :span="18">
+          <el-form-item label="">
+            <el-input :disabled="!form.isAugment" v-model="form.augment" />
+          </el-form-item>
+        </el-col>
+      </el-row>
+
 
       <el-row>
         <el-col :span="18">
@@ -34,8 +43,9 @@
           </el-form-item>
         </el-col>
         <el-col :span="1"></el-col>
-        <el-col :span="3"><el-button type="primary" @click="selectDirectory">选择</el-button></el-col>
+        <el-col :span="2"><el-button type="primary" @click="selectDirectory">选择</el-button></el-col>
         <el-col :span="2"><el-button type="primary" @click="openDir">打开</el-button></el-col>
+        <el-col :span="1"></el-col>
       </el-row>
 
       <el-form-item>
@@ -43,8 +53,8 @@
           @click="convert">转换</el-button>
       </el-form-item>
       <div>
-        <span style="margin-bottom: 10px;">日志</span>
-        <el-row>
+        <span>日志</span>
+        <el-row style="margin-top: 10px;">
           <el-col :span="24">
             <el-input :id="'textlog'" v-model="loginfo" :autosize="{ minRows: 10, maxRows: 10 }" :readonly="true"
               type="textarea" placeholder :input-style="{
@@ -261,6 +271,6 @@ echo "结束转换..."
 
 <style>
 .app {
-  width: 95%;
+  width: 100%;
 }
 </style>
