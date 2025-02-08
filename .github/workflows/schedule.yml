@@ -1,7 +1,7 @@
 name: main-schedule
 on:
   schedule:
-    - cron: '*/30 * * * *'
+    - cron: '0 12 * * *'
   pull_request:
     branches:
       - main
