@@ -29,11 +29,6 @@ jobs:
         with:
           ref: main
 
-      - name: 获取最后一次 commit 内容
-        run: |
-          echo "$(git log -1 --pretty=format:'%an: %s ')"
-          echo "LAST_COMMIT_INFO=$(git log -1 --pretty=format:'%an: %s ')" >> $GITHUB_OUTPUT
-
       - name: 读取 package.json 版本号
         id: get_version
         run: |
@@ -43,6 +38,9 @@ jobs:
           echo "MACOSVERSION=$VERSION-${{github.run_number}}" >> $GITHUB_OUTPUT
           CURRENT_DATETIME=$(date +"%Y%m%d %H:%M:%S")
           echo "CURRENT_DATETIME=$CURRENT_DATETIME" >> $GITHUB_OUTPUT
+          LAST_COMMIT_INFO=$(git log -1 --pretty=format:'%an: %s ')
+          echo "$LAST_COMMIT_INFO"
+          echo "LAST_COMMIT_INFO=$(git log -1 --pretty=format:'%an: %s ')" >> $GITHUB_OUTPUT
           TAG="app-${{github.event_name == 'schedule' && 'schedule-main'||'main'}}-v$VERSION-${{github.run_number}}"
           echo "TAG=$TAG" >> $GITHUB_OUTPUT
           echo "Tag:$TAG"
