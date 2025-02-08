@@ -43,15 +43,20 @@
           @click="convert">转换</el-button>
       </el-form-item>
       <div>
-        <span>日志</span>
-        <el-input :id="'textlog'" v-model="loginfo" :autosize="{ minRows: 10, maxRows: 10 }" :readonly="true"
-          type="textarea" placeholder :input-style="{
-            'background-color': '#554a4a',
-            color: 'white',
-            'font-size': '14px',
-            'font-weight': '400',
-            'font-family': 'monospace'
-          }"></el-input>
+        <span style="margin-bottom: 10px;">日志</span>
+        <el-row>
+          <el-col :span="24">
+            <el-input :id="'textlog'" v-model="loginfo" :autosize="{ minRows: 10, maxRows: 10 }" :readonly="true"
+              type="textarea" placeholder :input-style="{
+                'background-color': '#554a4a',
+                color: 'white',
+                'font-size': '14px',
+                'font-weight': '400',
+                'font-family': 'monospace'
+              }"></el-input>
+          </el-col>
+        </el-row>
+
       </div>
     </el-form>
   </div>

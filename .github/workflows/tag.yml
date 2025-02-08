@@ -9,8 +9,6 @@ on:
                 description: 'Branch to run the workflow on'
                 required: true
                 default: 'template'
-    schedule:
-      - cron: '*/30 * * * *'
 jobs:
   get_version:
     runs-on: ubuntu-latest
