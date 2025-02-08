@@ -22,6 +22,7 @@ jobs:
       current_datetime: ${{ steps.get_version.outputs.CURRENT_DATETIME }}
       macos_version: ${{ steps.get_version.outputs.MACOSVERSION }}
       last_commit_msg: ${{ steps.get_version.outputs.LAST_COMMIT_INFO }}
+      tagName: ${{ steps.get_version.outputs.TAG }}
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
@@ -41,6 +42,13 @@ jobs:
           echo "MACOSVERSION=$(jq -r '.version' package.json)-${{github.run_number}}" >> $GITHUB_OUTPUT
           CURRENT_DATETIME=$(date +"%Y%m%d %H:%M:%S")
           echo "CURRENT_DATETIME=$CURRENT_DATETIME" >> $GITHUB_OUTPUT
+          TAG="app-${{github.event_name == 'schedule' && 'schedule-main'||'main'}}-v$version-${{github.run_number}}"
+          echo "TAG=$TAG" >> $GITHUB_OUTPUT
+          echo "创建Tag:$TAG"
+          git tag $TAG
+          echo "Created new tag: $TAG"
+          git push origin --tags
+
 
   publish-tauri:
     needs: get_version
@@ -64,16 +72,6 @@ jobs:
     runs-on: ${{ matrix.platform }}
     steps:
       - uses: actions/checkout@v4
-
-      - name: Create a new tag
-        run: |
-          TAG="app-${{github.event_name == 'schedule' && 'schedule-main'||'main'}}-v${{ needs.get_version.outputs.version }}-${{github.run_number}}"
-          git tag $TAG
-          echo "Created new tag: $TAG"
-
-      - name: Push the tag to remote
-        run: |
-          git push origin --tags
 
       - name: setup node
         uses: actions/setup-node@v4
@@ -124,7 +122,8 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           # tagName: app-v__VERSION__ # the action automatically replaces \_\_VERSION\_\_ with the app version.
-          tagName: app-${{github.event_name == 'schedule' && 'schedule-main'||'main'}}-v${{ needs.get_version.outputs.version }}-${{github.run_number}}
+          # tagName: app-${{github.event_name == 'schedule' && 'schedule-main'||'main'}}-v${{ needs.get_version.outputs.version }}-${{github.run_number}}
+          tagName: ${{needs.get_version.outputs.tagName}}
           # releaseName: 'App version v__VERSION__'
           releaseName: 'App version ${{github.event_name}} v${{ needs.get_version.outputs.version }}-${{github.run_number}}'
           # releaseBody: 'tag:v.__VERSION__. ${{ github.event.head_commit.message }}.'
