@@ -36,22 +36,26 @@ jobs:
 
       - name: 读取 package.json 版本号
         id: get_version
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          echo "VERSION=$(jq -r '.version' package.json)" >> $GITHUB_OUTPUT
-          echo "WINDOWSVERSION=$(jq -r '.version' package.json)-${{github.run_number}}" >> $GITHUB_OUTPUT
-          echo "MACOSVERSION=$(jq -r '.version' package.json)-${{github.run_number}}" >> $GITHUB_OUTPUT
+          VERSION=$(jq -r '.version' package.json)
+          echo "VERSION=$VERSION" >> $GITHUB_OUTPUT
+          echo "WINDOWSVERSION=$VERSION-${{github.run_number}}" >> $GITHUB_OUTPUT
+          echo "MACOSVERSION=$VERSION-${{github.run_number}}" >> $GITHUB_OUTPUT
           CURRENT_DATETIME=$(date +"%Y%m%d %H:%M:%S")
           echo "CURRENT_DATETIME=$CURRENT_DATETIME" >> $GITHUB_OUTPUT
-          TAG="app-${{github.event_name == 'schedule' && 'schedule-main'||'main'}}-v$(jq -r '.version' package.json)-${{github.run_number}}"
+          TAG="app-${{github.event_name == 'schedule' && 'schedule-main'||'main'}}-v$VERSION-${{github.run_number}}"
           echo "TAG=$TAG" >> $GITHUB_OUTPUT
           echo "创建Tag:$TAG"
           git config user.name "GitHub Actions"
           git config user.email "github-actions[bot]@users.noreply.github.com"
           git tag $TAG
           echo "Created new tag: $TAG"
+
+      - name: Push the tag to remote
+        run: |
           git push origin --tags
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
 
   publish-tauri:
