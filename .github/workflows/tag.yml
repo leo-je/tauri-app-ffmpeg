@@ -17,6 +17,7 @@ jobs:
     outputs:
       version: ${{ steps.get_version.outputs.VERSION }}
       windows_version: ${{ steps.get_version.outputs.WINDOWSVERSION }}
+      current_datetime: ${{ steps.get_version.outputs.CURRENT_DATETIME }}
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
@@ -33,11 +34,13 @@ jobs:
           # 提取版本号 (去掉 -build.xxx)
           VERSION_NUMBER=${VERSION%-*}
           # 提取 pre-release 号 (取最后一部分)
-          # PRERELEASE=${VERSION##*.}
-          PRERELEASE="${{ github.run_number }}"
+          PRERELEASE=${VERSION##*.}
+          CURRENT_DATETIME=$(date +"%Y%m%d %H:%M:%S")
+          # PRERELEASE="${{ github.run_number }}"
           WINDOWSVERSION="$VERSION_NUMBER-$PRERELEASE"
           echo "VERSION=$VERSION" >> $GITHUB_OUTPUT
           echo "WINDOWSVERSION=$WINDOWSVERSION" >> $GITHUB_OUTPUT
+          echo "CURRENT_DATETIME=$CURRENT_DATETIME" >> $GITHUB_OUTPUT
 
   publish-tauri:
     needs: get_version
@@ -115,7 +118,7 @@ jobs:
           # releaseName: 'App version v__VERSION__'
           releaseName: 'App version v${{ needs.get_version.outputs.version }}'
           # releaseBody: 'tag:v.__VERSION__. ${{ github.event.head_commit.message }}.'
-          releaseBody: 'tag: v${{ needs.get_version.outputs.version }}. ${{ github.event.head_commit.message }}.'
+          releaseBody: 'tag: v${{ needs.get_version.outputs.version }}. ${{ github.event.head_commit.message }},,build number ${{ github.run_number }},time: ${{ needs.get_version.outputs.current_datetime }}'
           releaseDraft: false
           prerelease: false
           args: ${{ matrix.args }} --config '{"version":"${{matrix.platform == 'windows-latest' && needs.get_version.outputs.windows_version || needs.get_version.outputs.version}}"}'
