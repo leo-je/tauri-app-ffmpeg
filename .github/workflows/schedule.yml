@@ -30,7 +30,8 @@ jobs:
 
       - name: 获取最后一次 commit 内容
         run: |
-          echo "echo "LAST_COMMIT_INFO=$(git log -1 --pretty=format:'%an: %s ')" >> $GITHUB_OUTPUT
+          echo "$(git log -1 --pretty=format:'%an: %s ')"
+          echo "LAST_COMMIT_INFO=$(git log -1 --pretty=format:'%an: %s ')" >> $GITHUB_OUTPUT
 
       - name: 读取 package.json 版本号
         id: get_version
