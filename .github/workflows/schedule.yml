@@ -65,6 +65,16 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
+      - name: Create a new tag
+        run: |
+          TAG="app-${{github.event_name == 'schedule' && 'schedule-main'||'main'}}-v${{ needs.get_version.outputs.version }}-${{github.run_number}}"
+          git tag $TAG
+          echo "Created new tag: $TAG"
+
+      - name: Push the tag to remote
+        run: |
+          git push origin --tags
+
       - name: setup node
         uses: actions/setup-node@v4
         with:
