@@ -49,7 +49,7 @@ jobs:
           # RELEASEBODY="version v$VERSION by ${{github.event_name}} commit:$LAST_COMMIT_INFO,build number ${{ github.run_number }},time: $CURRENT_DATETIME"
           RELEASEBODY="build number ${{ github.run_number }}"
           echo "RELEASEBODY: $RELEASEBODY"
-          echo "RELEASE_BODY:$RELEASEBODY" >> $GITHUB_OUTPUT
+          # echo "RELEASE_BODY:$RELEASEBODY" >> $GITHUB_OUTPUT
           RELEASENAME="App version ${{github.event_name}} v$VERSION-${{github.run_number}}"
           echo "RELEASENAME: $RELEASENAME"
           echo "RELEASE_NAME:$RELEASENAME" >> $GITHUB_OUTPUT
