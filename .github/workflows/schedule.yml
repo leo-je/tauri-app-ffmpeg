@@ -9,17 +9,6 @@ on:
       - '**.md'
       - 'LICENSE'
   workflow_dispatch:
-    inputs:
-      doRelease:
-        description: 'Publish new release'
-        type: boolean
-        default: false
-        required: false
-      buildOnly:
-        description: 'Only build ffmpeg'
-        type: boolean
-        default: false
-        required: false
 
 
 jobs:
