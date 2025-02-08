@@ -51,7 +51,6 @@ jobs:
           echo "RELEASEBODY: $RELEASEBODY"
           RELEASENAME="App version ${{github.event_name}} v$VERSION-${{github.run_number}}"
           echo "RELEASENAME: $RELEASENAME"
-          echo "RELEASE_NAME:$RELEASENAME" >> $GITHUB_OUTPUT
           gh release create "$TAG" --target "main" --title "$RELEASENAME" --notes "$RELEASEBODY"
         env:
           GITHUB_TOKEN: ${{ github.token }}
