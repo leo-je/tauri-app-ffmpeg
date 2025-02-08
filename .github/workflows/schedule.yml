@@ -45,19 +45,7 @@ jobs:
           echo "CURRENT_DATETIME=$CURRENT_DATETIME" >> $GITHUB_OUTPUT
           TAG="app-${{github.event_name == 'schedule' && 'schedule-main'||'main'}}-v$VERSION-${{github.run_number}}"
           echo "TAG=$TAG" >> $GITHUB_OUTPUT
-          echo "创建Tag:$TAG"
-
-      - name: Release Tag
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        # You may pin to the exact commit or the version.
-        # uses: Akryum/release-tag@01f55b5917052ed0c91be13abdb7a23ccd103d90
-        uses: Akryum/release-tag@v4.0.3
-        with:
-          # The name of the tag. This should come from the webhook payload, `github.GITHUB_REF` when a user pushes a new tag
-          tag_name: ${{steps.get_version.outputs.TAG}}
-          
-
+          echo "Tag:$TAG"
 
   publish-tauri:
     needs: get_version
