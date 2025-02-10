@@ -1,10 +1,10 @@
 import { execSync } from 'child_process';
-import { getInput, setFailed } from '@actions/core';
+import { GitHub } from '@actions/github/lib/utils';
 
 async function run() {
   try {
     // 获取输入参数
-    const tabName = getInput('tabName');
+    const tabName = 'test-v1.1.1';
     
     console.log(`Creating tag: ${tabName}`);
 
@@ -19,8 +19,9 @@ async function run() {
     // 推送标签到远程仓库
     execSync(`git push origin ${tabName}`);
     console.log(`Tag pushed to remote: ${tabName}`);
+    
   } catch (error) {
-    setFailed(error.message);
+    //setFailed(error.message);
   }
 }
 
