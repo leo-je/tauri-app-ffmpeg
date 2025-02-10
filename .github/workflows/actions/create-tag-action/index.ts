@@ -17,7 +17,7 @@ async function run() {
         });
         console.log(createdRelease);
     } catch (error) {
-        //setFailed(error.message);
+        console.error(error)
     }
 }
 
