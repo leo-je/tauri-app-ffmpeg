@@ -51,6 +51,7 @@ jobs:
           gh release create "$TAG" --target "main" --title "$RELEASENAME" --notes "$RELEASEBODY"
           echo "RELEASE_NAME=$RELEASENAME" >> $GITHUB_OUTPUT
           echo "RELEASE_BODY=$RELEASEBODY" >> $GITHUB_OUTPUT
+          echo "${{github.token}}"
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
