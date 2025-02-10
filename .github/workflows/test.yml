@@ -55,7 +55,7 @@ jobs:
           echo "RELEASE_NAME=$RELEASENAME" >> $GITHUB_OUTPUT
           echo "RELEASE_BODY=$RELEASEBODY" >> $GITHUB_OUTPUT
         env:
-          GITHUB_TOKEN: ${{ github.token }}
+          GITHUB_TOKEN: ${{ secrets.ACTIONS_PAT }}
 
   publish-tauri:
     needs: get_version
