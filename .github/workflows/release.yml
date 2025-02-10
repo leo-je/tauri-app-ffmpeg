@@ -36,7 +36,7 @@ jobs:
         with:
           ref: release
 
-      - name: 读取 package.json 版本号
+      - name: 创建tab和release信息
         id: get_version
         run: |
           BRANCH_NAME=$(git rev-parse --abbrev-ref HEAD)
