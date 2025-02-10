@@ -3,7 +3,7 @@ import { getOctokit, context } from '@actions/github';
 async function run() {
     try {
         // 获取输入参数
-        const github = getOctokit(process.env.GITHUB_TOKEN);
+        const github = getOctokit(process.env.GITHUB_TOKEN || '');
         const tagName = 'test-v1.1.1';
         const createdRelease = await github.rest.repos.createRelease({
             owner:'owb',

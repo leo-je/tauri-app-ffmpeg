@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "build": "ncc build index.js --license licenses.txt"
+    "build": "ncc build index.ts -o dist -m --license licenses.txt"
   },
   "keywords": [],
   "author": "",
@@ -13,7 +13,8 @@
   "dependencies": {
     "@actions/core": "^1.11.1",
     "@actions/github": "^6.0.0",
-    "@vercel/ncc": "^0.38.3"
+    "@vercel/ncc": "^0.38.3",
+    "tslib": "^2.8.1"
   },
   "devDependencies": {
     "@types/node": "^22.13.1"
