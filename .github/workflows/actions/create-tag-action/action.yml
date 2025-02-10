@@ -1,4 +1,6 @@
 name: 'Create Tag Action'
+icon: 'download-cloud'
+color: 'blue'
 description: 'Create a Git tag based on the provided tabName parameter'
 
 inputs:
