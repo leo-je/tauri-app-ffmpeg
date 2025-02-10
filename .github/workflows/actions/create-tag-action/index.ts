@@ -7,7 +7,7 @@ async function run() {
         const tagName = 'test-v1.1.1';
         const createdRelease = await github.rest.repos.createRelease({
             owner:'leo-je',
-            repo:'test',
+            repo:'tauri-app-ffmpeg',
             tag_name: tagName,
             name: 'releaseName',
             body: 'test',
