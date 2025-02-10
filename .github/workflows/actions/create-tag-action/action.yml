@@ -8,6 +8,9 @@ inputs:
     description: 'The name of the tag to create'
     required: true
     default: 'v1.0.0'  # 默认标签版本，如果没有传入 `tabName` 参数
+  releaseName: # 默认发布名称，如果没有传入 `releaseName` 参数
+    description: 'The name of the tag to create'
+    required: true
 env:
   GITHUB_TOKEN: ''
 runs:

@@ -53,16 +53,16 @@ jobs:
           echo "RELEASEBODY: $RELEASEBODY"
           RELEASENAME="App version test v$VERSION-${{github.run_number}}"
           echo "RELEASENAME: $RELEASENAME"
-          # gh release create "$TAG" --target "test" --title "$RELEASENAME" --notes "$RELEASEBODY"
+          gh release create "$TAG" --target "test" --title "$RELEASENAME" --notes "$RELEASEBODY"
           echo "RELEASE_NAME=$RELEASENAME" >> $GITHUB_OUTPUT
           echo "RELEASE_BODY=$RELEASEBODY" >> $GITHUB_OUTPUT
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Create tag using custom action
-        uses: ./.github/workflows/actions/create-tag-action
-        with:
-          tabName: 'test-v0.1.0'
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      # - name: Create tag using custom action
+      #   uses: ./.github/workflows/actions/create-tag-action
+      #   with:
+      #     tabName: 'test-v0.1.0'
+      #   env:
+      #     GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
