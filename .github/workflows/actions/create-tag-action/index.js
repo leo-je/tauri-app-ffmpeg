@@ -1,10 +1,10 @@
-const { execSync } = require('child_process');
-const core = require('@actions/core');
+import { execSync } from 'child_process';
+import { getInput, setFailed } from '@actions/core';
 
 async function run() {
   try {
     // 获取输入参数
-    const tabName = core.getInput('tabName');
+    const tabName = getInput('tabName');
     
     console.log(`Creating tag: ${tabName}`);
 
@@ -20,7 +20,7 @@ async function run() {
     execSync(`git push origin ${tabName}`);
     console.log(`Tag pushed to remote: ${tabName}`);
   } catch (error) {
-    core.setFailed(error.message);
+    setFailed(error.message);
   }
 }
 
