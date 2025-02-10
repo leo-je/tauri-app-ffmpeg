@@ -52,7 +52,7 @@
         <el-col :span="11"></el-col>
         <el-col :span="8">
           <el-button :disabled="(!form.filePath || !form.outPath || !form.format) || form.isConverting" type="success"
-            @click="convert">{{ form.isConverting?'转换中...':'开始转换' }}</el-button>
+            @click="convert">{{ form.isConverting ? '转换中...' : '开始转换' }}</el-button>
         </el-col>
       </el-row>
 
@@ -270,10 +270,35 @@ echo "结束转换..."
   const child = await command.spawn();
   console.log('pid:', child.pid);
 }
+
+// 禁止鼠标左键选中和复制网页内容
+function disableSelection(event:any) {
+  if (typeof event.preventDefault !== "undefined") {
+    event.preventDefault();
+  } else {
+    event.returnValue = false;
+  }
+}
+
+// 在加载页面时绑定事件
+window.onload = function () {
+  document.addEventListener("mousedown", disableSelection);
+  document.addEventListener("contextmenu", disableSelection);
+};
+
 </script>
 
 
-<style>
+<style scoped>
+/* 禁止选择文本 */
+* {
+  -webkit-user-select: none; /* 针对 WebKit 内核的浏览器 */
+  -moz-user-select: none; /* 针对 Firefox 浏览器 */
+  -ms-user-select: none; /* 针对 IE 浏览器 */
+  user-select: none; /* 标准属性 */
+}
+
+
 .app {
   width: 100%;
   margin-top: 50px;
