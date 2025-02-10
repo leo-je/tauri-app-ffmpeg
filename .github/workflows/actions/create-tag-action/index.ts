@@ -1,23 +1,26 @@
 import { getOctokit, context } from '@actions/github';
+import * as core from '@actions/core';
 
 async function run() {
     try {
         // 获取输入参数
         const github = getOctokit(process.env.GITHUB_TOKEN || '');
         const tagName = 'test-v1.1.1';
+        const owner = core.getInput('owner') || context.repo.owner;
+        const repo = core.getInput('repo') || context.repo.repo;
         const createdRelease = await github.rest.repos.createRelease({
-            owner:'leo-je',
-            repo:'tauri-app-ffmpeg',
+            owner,
+            repo,
             tag_name: tagName,
             name: 'releaseName',
             body: 'test',
-            draft:false,
-            prerelease:false,
+            draft: false,
+            prerelease: false,
             target_commitish: context.sha,
         });
         console.log(createdRelease);
-    } catch (error) {
-        console.error(error)
+    } catch (error: any) {
+        core.setFailed(error['message'] + '');
     }
 }
 
