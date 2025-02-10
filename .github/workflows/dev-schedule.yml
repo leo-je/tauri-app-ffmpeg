@@ -39,6 +39,7 @@ jobs:
       - name: 读取 package.json 版本号
         id: get_version
         run: |
+          BRANCH_NAME=$(git rev-parse --abbrev-ref HEAD)
           VERSION=$(jq -r '.version' package.json)
           echo "VERSION=$VERSION" >> $GITHUB_OUTPUT
           echo "WINDOWSVERSION=$VERSION-${{github.run_number}}" >> $GITHUB_OUTPUT
@@ -48,14 +49,14 @@ jobs:
           LAST_COMMIT_INFO=$(git log -1 --pretty=format:'%an: %s ')
           echo "$LAST_COMMIT_INFO"
           echo "LAST_COMMIT_INFO=$LAST_COMMIT_INFO" >> $GITHUB_OUTPUT
-          TAG="app-${{github.event_name == 'schedule' && 'schedule-dev'||'dev'}}-v$VERSION-${{github.run_number}}"
+          TAG="app-${{github.event_name == 'schedule' && 'schedule-'||''}}$BRANCH_NAME-v$VERSION-${{github.run_number}}"
           echo "TAG=$TAG" >> $GITHUB_OUTPUT
           echo "Tag:$TAG"
           RELEASEBODY="version v$VERSION by ${{github.event_name}} commit:$LAST_COMMIT_INFO,build number ${{ github.run_number }},time: $CURRENT_DATETIME"
           echo "RELEASEBODY: $RELEASEBODY"
-          RELEASENAME="[dev]App version ${{github.event_name}} v$VERSION-${{github.run_number}}"
+          RELEASENAME="[$BRANCH_NAME]App version ${{github.event_name}} v$VERSION-${{github.run_number}}"
           echo "RELEASENAME: $RELEASENAME"
-          gh release create "$TAG" --target "dev" --title "$RELEASENAME" --notes "$RELEASEBODY"
+          gh release create "$TAG" --target "$BRANCH_NAME" --title "$RELEASENAME" --notes "$RELEASEBODY"
           echo "RELEASE_NAME=$RELEASENAME" >> $GITHUB_OUTPUT
           echo "RELEASE_BODY=$RELEASEBODY" >> $GITHUB_OUTPUT
         env:
