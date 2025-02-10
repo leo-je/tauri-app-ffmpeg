@@ -6,7 +6,7 @@ async function run() {
         const github = getOctokit(process.env.GITHUB_TOKEN || '');
         const tagName = 'test-v1.1.1';
         const createdRelease = await github.rest.repos.createRelease({
-            owner:'owb',
+            owner:'leo-je',
             repo:'test',
             tag_name: tagName,
             name: 'releaseName',
