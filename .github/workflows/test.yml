@@ -2,7 +2,7 @@ name: main-test
 on:
   pull_request:
     branches:
-      - main
+      - test
     paths-ignore:
       - '**.md'
       - 'LICENSE'
@@ -27,7 +27,7 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
         with:
-          ref: main
+          ref: test
 
       - name: setting package info
         id: get_version
