@@ -1,0 +1,12 @@
+name: 'Create Tag Action'
+description: 'Create a Git tag based on the provided tabName parameter'
+
+inputs:
+  tabName:
+    description: 'The name of the tag to create'
+    required: true
+    default: 'v1.0.0'  # 默认标签版本，如果没有传入 `tabName` 参数
+
+runs:
+  using: 'node20'
+  main: 'index.js'
