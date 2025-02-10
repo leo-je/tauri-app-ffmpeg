@@ -59,6 +59,6 @@ jobs:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Create tag using custom action
-        uses: ./github/workflows/actions/create-tag-action
+        uses: ./.github/workflows/actions/create-tag-action
         with:
           tabName: 'test-v0.1.0'
