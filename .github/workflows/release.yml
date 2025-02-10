@@ -1,10 +1,13 @@
-name: main-schedule
+name: relsease
 on:
-  schedule:
-    - cron: '0 12 * * *'
+  push:
+    branches:
+      - release
+  # schedule:
+  #   - cron: '0 12 * * *'
   pull_request:
     branches:
-      - main
+      - release
     paths-ignore:
       - '**.md'
       - 'LICENSE'
@@ -31,28 +34,30 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
         with:
-          ref: main
+          ref: release
 
-      - name: 读取 package.json 版本号
+      - name: 创建tab和release信息
         id: get_version
         run: |
+          BRANCH_NAME=$(git rev-parse --abbrev-ref HEAD)
           VERSION=$(jq -r '.version' package.json)
+          run_number="${{github.run_number}}"
           echo "VERSION=$VERSION" >> $GITHUB_OUTPUT
-          echo "WINDOWSVERSION=$VERSION-${{github.run_number}}" >> $GITHUB_OUTPUT
-          echo "MACOSVERSION=$VERSION-${{github.run_number}}" >> $GITHUB_OUTPUT
+          echo "WINDOWSVERSION=$VERSION-$run_number" >> $GITHUB_OUTPUT
+          echo "MACOSVERSION=$VERSION-$run_number" >> $GITHUB_OUTPUT
           CURRENT_DATETIME=$(date +"%Y%m%d %H:%M:%S")
           echo "CURRENT_DATETIME=$CURRENT_DATETIME" >> $GITHUB_OUTPUT
           LAST_COMMIT_INFO=$(git log -1 --pretty=format:'%an: %s ')
           echo "$LAST_COMMIT_INFO"
           echo "LAST_COMMIT_INFO=$LAST_COMMIT_INFO" >> $GITHUB_OUTPUT
-          TAG="app-${{github.event_name == 'schedule' && 'schedule-main'||'main'}}-v$VERSION-${{github.run_number}}"
+          TAG="app-${{github.event_name == 'schedule' && 'schedule-'||''}}$BRANCH_NAME-v$VERSION-$run_number"
           echo "TAG=$TAG" >> $GITHUB_OUTPUT
           echo "Tag:$TAG"
-          RELEASEBODY="version v$VERSION by ${{github.event_name}} commit:$LAST_COMMIT_INFO,build number ${{ github.run_number }},time: $CURRENT_DATETIME"
+          RELEASEBODY="version v$VERSION by ${{github.event_name}} commit:$LAST_COMMIT_INFO,build number $run_number,time: $CURRENT_DATETIME"
           echo "RELEASEBODY: $RELEASEBODY"
-          RELEASENAME="App version ${{github.event_name}} v$VERSION-${{github.run_number}}"
+          RELEASENAME="[$BRANCH_NAME]App version ${{github.event_name}} v$VERSION-$run_number"
           echo "RELEASENAME: $RELEASENAME"
-          # gh release create "$TAG" --target "main" --title "$RELEASENAME" --notes "$RELEASEBODY"
+          gh release create "$TAG" --target "$BRANCH_NAME" --title "$RELEASENAME" --notes "$RELEASEBODY"
           echo "RELEASE_NAME=$RELEASENAME" >> $GITHUB_OUTPUT
           echo "RELEASE_BODY=$RELEASEBODY" >> $GITHUB_OUTPUT
         env:
@@ -129,12 +134,8 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          # tagName: app-v__VERSION__ # the action automatically replaces \_\_VERSION\_\_ with the app version.
-          # tagName: app-${{github.event_name == 'schedule' && 'schedule-main'||'main'}}-v${{ needs.get_version.outputs.version }}-${{github.run_number}}
           tagName: ${{needs.get_version.outputs.tagName}}
-          # releaseName: 'App version v__VERSION__'
           releaseName: ${{needs.get_version.outputs.releaseName}}
-          # releaseBody: 'tag:v.__VERSION__. ${{ github.event.head_commit.message }}.'
           releaseBody: ${{needs.get_version.outputs.releaseBody}}
           releaseDraft: false
           prerelease: false
