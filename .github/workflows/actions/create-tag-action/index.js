@@ -1,5 +1,5 @@
 import { execSync } from 'child_process';
-import { GitHub } from '@actions/github/lib/utils';
+// import { GitHub } from '@actions/github/lib/utils';
 
 async function run() {
   try {
