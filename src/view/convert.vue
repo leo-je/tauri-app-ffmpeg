@@ -33,7 +33,7 @@
           </el-form-item>
         </el-col>
         <el-col :span="1"></el-col>
-        <el-col :span="2"><el-button type="primary" @click="openSetting">参数配置</el-button></el-col>
+        <el-col :span="2"><el-button :disabled="!form.isAugment" type="primary" @click="openSetting">参数配置</el-button></el-col>
       </el-row>
 
 
