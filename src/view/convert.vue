@@ -29,7 +29,7 @@
       <el-row>
         <el-col :span="18">
           <el-form-item label="">
-            <el-input :disabled="!form.isAugment" v-model="form.augment" />
+            <el-input :disabled="!form.isAugment" v-model="form.augment" :readonly="true"/>
           </el-form-item>
         </el-col>
         <el-col :span="1"></el-col>
@@ -123,6 +123,15 @@ const form = reactive({
   isConverting: false
 })
 
+const loadArg = () => {
+  let arg = localStorage.getItem('ffmpegCommandArg')
+  console.log(arg)
+  if (!arg) {
+    arg = '-b:a 320k -ar 48000'
+  }
+  form.augment = arg;
+}
+loadArg()
 
 
 const setting = () => {
@@ -274,29 +283,14 @@ echo "结束转换..."
   console.log('pid:', child.pid);
 }
 
-// 禁止鼠标左键选中和复制网页内容
-function disableSelection(event: any) {
-  if (typeof event.preventDefault !== "undefined") {
-    event.preventDefault();
-  } else {
-    event.returnValue = false;
-  }
-}
-
-// 在加载页面时绑定事件
-window.onload = function () {
-  // document.addEventListener("mousedown", disableSelection);
-  // document.addEventListener("contextmenu", disableSelection);
-};
-
 const openSetting = () => {
   let main = getCurrent()
   main.setEnabled(false)
   createWin({
     label: "setting",
-    title: "设置",
+    title: "参数设置",
     url: "/setting",
-    width: 800,
+    width: 820,
     height: 500,
     resizable: false,
     minimizable: true,
@@ -309,6 +303,7 @@ const openSetting = () => {
     transparent: false,
     ondDestroyed: (_e: any) => {
       main.setEnabled(true)
+      loadArg()
     }
 
   })
@@ -318,19 +313,6 @@ const openSetting = () => {
 
 
 <style scoped>
-/* 禁止选择文本 */
-* {
-  -webkit-user-select: none;
-  /* 针对 WebKit 内核的浏览器 */
-  -moz-user-select: none;
-  /* 针对 Firefox 浏览器 */
-  -ms-user-select: none;
-  /* 针对 IE 浏览器 */
-  user-select: none;
-  /* 标准属性 */
-}
-
-
 .app {
   width: 100%;
   margin-top: 50px;
