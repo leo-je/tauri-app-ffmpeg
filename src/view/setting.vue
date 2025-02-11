@@ -124,9 +124,4 @@ const onSubmit = () => {
 .item {
     margin-bottom: 18px;
 }
-
-.box-card {
-    /* width: 480px; */
-    /* margin: 20px auto; */
-}
 </style>
