@@ -18,7 +18,7 @@
       "tsp": false,
       "webviewInstallMode": {
         "silent": true,
-        "type": "embedBootstrapper"
+        "type": "offlineInstaller"
       },
       "wix": null
     }
