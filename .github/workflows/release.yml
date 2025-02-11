@@ -50,10 +50,10 @@ jobs:
           LAST_COMMIT_INFO=$(git log -1 --pretty=format:'%an: %s ')
           echo "$LAST_COMMIT_INFO"
           echo "LAST_COMMIT_INFO=$LAST_COMMIT_INFO" >> $GITHUB_OUTPUT
-          TAG="app-${{github.event_name == 'schedule' && 'schedule-'||''}}$BRANCH_NAME-v$VERSION-$run_number"
+          TAG="${{github.event_name == 'schedule' && 'schedule-'||''}}$BRANCH_NAME-v$VERSION-$run_number"
           echo "TAG=$TAG" >> $GITHUB_OUTPUT
           echo "Tag:$TAG"
-          RELEASEBODY="version v$VERSION by ${{github.event_name}} commit:$LAST_COMMIT_INFO,build number $run_number,time: $CURRENT_DATETIME"
+          RELEASEBODY="version v$VERSION by ${{github.event_name}}:$LAST_COMMIT_INFO,build number $run_number,time: $CURRENT_DATETIME"
           echo "RELEASEBODY: $RELEASEBODY"
           RELEASENAME="[$BRANCH_NAME]App version ${{github.event_name}} v$VERSION-$run_number"
           echo "RELEASENAME: $RELEASENAME"
