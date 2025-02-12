@@ -246,8 +246,12 @@ return $?
 $OutputEncoding = [System.Text.Encoding]::UTF8
 chcp 65001
 echo "开始转换..."
+echo 'appLocalDataDir:${p}'
+echo 'appDataDir:${p2}'
+echo 'appConfigDir:${p3}'
+echo 'appLogDir:${p4}'
 echo 'resourceDir:${p5}'
-'${p5}/assets/win/ffmpeg/bin/ffmpeg.exe' -hide_banner -y -i ${form.filePath} ${form.isAugment ? form.augment : ''} ${outPath}
+& '${p5}/assets/win/ffmpeg/bin/ffmpeg.exe' -hide_banner -y -i ${form.filePath} ${form.isAugment ? form.augment : ''} ${outPath}
 echo "结束转换..."
 `
 
