@@ -11,11 +11,11 @@
     "windows": {
       "nsis":{
         "compression": "zlib",
-        "languages": ["SimpChinese","en-US"],
+        "languages": ["SimpChinese","English"],
         "displayLanguageSelector": true,
         "customLanguageFiles": {
           "SimpChinese": "./assets/win/languages/SimpChinese.nsh",
-          "en-US": "./assets/win/languages/English.nsh"
+          "English": "./assets/win/languages/English.nsh"
         },
         "installMode": "both"
       },
