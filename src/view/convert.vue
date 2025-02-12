@@ -317,10 +317,15 @@ const openSetting = () => {
     center: true,
     focus: true,
     transparent: false,
-    onDestroyed: (_e: any) => {
-      main.setEnabled(true)
+    onDestroyed: async (_e: any) => {
+      await main.setEnabled(true)
+      await main.setFocus()
       loadArg()
-    }
+    },
+    onError: async (_e: any) => {
+      await main.setEnabled(true)
+      await main.setFocus()
+    },
 
   })
 };
