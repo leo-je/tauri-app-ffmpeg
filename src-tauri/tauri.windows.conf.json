@@ -14,10 +14,12 @@
         "languages": ["中文","en-US"],
         "displayLanguageSelector": true,
         "customLanguageFiles": {
-          "中文": "assets/win/languages/SimpChinese.nsh",
-          "en-US": "assets/win/languages/English.nsh"
-        }
+          "中文": "./assets/win/languages/SimpChinese.nsh",
+          "en-US": "./assets/win/languages/English.nsh"
+        },
+        "installMode": "both"
       },
+      
       "webviewInstallMode": {
         "type": "embedBootstrapper"
       }
