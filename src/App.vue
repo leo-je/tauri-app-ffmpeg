@@ -16,8 +16,8 @@ function disableSelection(event: any) {
 
 // 在加载页面时绑定事件
 window.onload = function () {
-  document.addEventListener("mousedown", disableSelection);
-  document.addEventListener("contextmenu", disableSelection);
+  // document.addEventListener("mousedown", disableSelection);
+  // document.addEventListener("contextmenu", disableSelection);
 };
 </script>
 

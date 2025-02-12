@@ -29,11 +29,12 @@
       <el-row>
         <el-col :span="18">
           <el-form-item label="">
-            <el-input :disabled="!form.isAugment" v-model="form.augment" :readonly="true"/>
+            <el-input :disabled="!form.isAugment" v-model="form.augment" :readonly="true" />
           </el-form-item>
         </el-col>
         <el-col :span="1"></el-col>
-        <el-col :span="2"><el-button :disabled="!form.isAugment" type="primary" @click="openSetting">参数配置</el-button></el-col>
+        <el-col :span="2"><el-button :disabled="!form.isAugment" type="primary"
+            @click="openSetting">参数配置</el-button></el-col>
       </el-row>
 
 
@@ -85,7 +86,12 @@ import { Command } from 'tauri-plugin-shellx-api';
 import { platform } from '@tauri-apps/plugin-os';
 import { path } from '@tauri-apps/api';
 import { createWin, getCurrent } from '../utils/WindowsUtils';
+import { Store } from '@tauri-apps/plugin-store';
+// const store = new Store('store.bin');
+let store: any = null;//await Store.load('store.json');
 // do not use same name with ref
+
+
 
 // 定义所有的音频格式
 const audioFormats = [
@@ -123,31 +129,37 @@ const form = reactive({
   isConverting: false
 })
 
-const loadArg = () => {
-  let arg = localStorage.getItem('ffmpegCommandArg')
-  console.log(arg)
-  if (!arg) {
-    arg = '-b:a 320k -ar 48000'
-  }
-  form.augment = arg;
-}
-loadArg()
-
-
 const setting = () => {
-  localStorage.setItem('form', JSON.stringify(form))
+  store.set('form', form);
+  // localStorage.setItem('form', JSON.stringify(form))
 }
-const getting = () => {
-  let formStr = localStorage.getItem('form')
-  if (formStr) {
-    let json = JSON.parse(formStr)
+const getting = async () => {
+  let json: any = await store.get('form');
+  // let formStr = localStorage.getItem('form')
+  if (json) {
+    // let json = JSON.parse(formStr)
     json.logs = ''
     json.isConverting = false
     Object.assign(form, json)
   }
 }
 
-getting();
+const loadArg = async () => {
+  let arg = localStorage.getItem('ffmpegCommandArg')
+  console.log(arg)
+  if (!arg) {
+    arg = '-b:a 320k -ar 48000'
+  }
+  form.augment = arg + '';
+}
+
+(async () => {
+  console.log('init store')
+  store = await Store.load('store.json');
+  loadArg()
+  getting();
+})()
+
 
 const selectFile = async () => {
   const filePath = await open({
@@ -305,7 +317,7 @@ const openSetting = () => {
     center: true,
     focus: true,
     transparent: false,
-    ondDestroyed: (_e: any) => {
+    onDestroyed: (_e: any) => {
       main.setEnabled(true)
       loadArg()
     }

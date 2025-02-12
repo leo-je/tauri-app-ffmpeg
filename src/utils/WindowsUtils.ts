@@ -27,7 +27,7 @@ export const createWin = (options: any) => {
 
     });
 
-    webview.once("tauri://destroyed", options.ondDestroyed ? options.ondDestroyed : function (e) {
+    webview.once("tauri://destroyed", options.onDestroyed ? options.onDestroyed : function (e) {
         console.log("tauri://destroyed", e);
     });
 
