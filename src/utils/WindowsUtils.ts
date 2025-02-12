@@ -27,17 +27,17 @@ export const createWin = (options: any) => {
 
     });
 
-    webview.once("tauri://destroyed", options.ondDestroyed ? options.ondDestroyed : function (e) {
+    webview.once("tauri://destroyed", options.onDestroyed ? options.onDestroyed : function (e) {
         console.log("tauri://destroyed", e);
     });
 
     // 窗口创建成功触发
-    webview.once("tauri://created", function () {
+    webview.once("tauri://created", options.onCreated ? options.onCreated :function () {
         console.log(options.title + "创建成功！！！");
     });
 
     // 窗口创建失败触发
-    webview.once("tauri://error", function (e) {
+    webview.once("tauri://error", options.onError ? options.onError :function (e) {
         console.log(options.title + "创建失败！！！", e);
     });
 };

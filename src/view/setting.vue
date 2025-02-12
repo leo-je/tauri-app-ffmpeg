@@ -5,6 +5,7 @@
 
             <el-form-item label="视频编码器">
                 <el-select v-model="form.videoCodec" placeholder="请选择视频编码器">
+                    <el-option label="" value=""></el-option>
                     <el-option label="libx264" value="libx264"></el-option>
                     <el-option label="libx265" value="libx265"></el-option>
                     <el-option label="h264_nvenc" value="h264_nvenc"></el-option>
@@ -12,6 +13,7 @@
             </el-form-item>
             <el-form-item label="音频编码器">
                 <el-select v-model="form.audioCodec" placeholder="请选择音频编码器">
+                    <el-option label="" value=""></el-option>
                     <el-option label="aac" value="aac"></el-option>
                     <el-option label="libmp3lame" value="libmp3lame"></el-option>
                     <el-option label="opus" value="opus"></el-option>
@@ -42,6 +44,10 @@
 <script lang="ts" setup>
 import { reactive } from 'vue';
 import { getCurrent } from '../utils/WindowsUtils';
+import { Store } from '@tauri-apps/plugin-store';
+// const store = new Store('store.bin');
+let store: any = null;//await Store.load('store.json');
+
 
 const form = reactive({
     inputFile: '',
@@ -55,13 +61,20 @@ const form = reactive({
     framerate: ''
 });
 
-let formJson = localStorage.getItem('form');
-if(formJson){
-    let json = JSON.parse(formJson);
-    Object.assign(form, json);
-}
 
-const onSubmit = () => {
+(async () => {
+    console.log('init store')
+    store = await Store.load('store.json');
+    let f = await store.get('form')
+    // let formJson = localStorage.getItem('form');
+    console.log(f)
+    if (f) {
+        // let json = JSON.parse(formJson);
+        Object.assign(form, f);
+    }
+})()
+
+const onSubmit = async () => {
     console.log('提交的配置:', form);
     // 这里可以添加保存配置的逻辑
     console.log(form)
@@ -102,7 +115,9 @@ const onSubmit = () => {
     if (form.framerate) {
         ffmpegCommand += ` -r ${form.framerate}`;
     }
-    localStorage.setItem('form', JSON.stringify(form))
+    await store.set('form', form);
+    // localStorage.setItem('form', JSON.stringify(form))
+    await store.save();
     localStorage.setItem('ffmpegCommandArg', ffmpegCommand)
     console.log('生成的 FFmpeg 命令:', ffmpegCommand);
     let win = getCurrent();

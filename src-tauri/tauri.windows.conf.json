@@ -9,6 +9,17 @@
       "assets/win/**/*"
     ],
     "windows": {
+      "nsis":{
+        "compression": "zlib",
+        "languages": ["SimpChinese","English"],
+        "displayLanguageSelector": true,
+        "customLanguageFiles": {
+          "SimpChinese": "./assets/win/languages/SimpChinese.nsh",
+          "English": "./assets/win/languages/English.nsh"
+        },
+        "installMode": "both"
+      },
+      
       "webviewInstallMode": {
         "type": "embedBootstrapper"
       }
