@@ -11,11 +11,11 @@
     "windows": {
       "nsis":{
         "compression": "zlib",
-        "languages": ["中文","en-US"],
+        "languages": ["SimpChinese","en-US"],
         "displayLanguageSelector": true,
         "customLanguageFiles": {
-          "中文": "./assets/win/languages/SimpChinese.nsh",
-          "en-US": "./assets/win/languages/English.nsh"
+          "SimpChinese": "https://github.com/tauri-apps/tauri/blob/dev/crates/tauri-bundler/src/bundle/windows/nsis/languages/SimpChinese.nsh",
+          "en-US": "https://github.com/tauri-apps/tauri/blob/dev/crates/tauri-bundler/src/bundle/windows/nsis/languages/English.nsh"
         },
         "installMode": "both"
       },
