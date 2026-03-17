@@ -1,43 +1,75 @@
 <!-- src/view/setting.vue -->
 <template>
-    <div>
-        <el-form :model="form" label-width="120px">
+    <div class="settings-page">
+        <div class="settings-card">
+            <div class="settings-header">
+                <h2 class="settings-title">转码配置</h2>
+                <p class="settings-subtitle">配置 FFmpeg 转码参数</p>
+            </div>
 
-            <el-form-item label="视频编码器">
-                <el-select v-model="form.videoCodec" placeholder="请选择视频编码器">
-                    <el-option label="" value=""></el-option>
-                    <el-option label="libx264" value="libx264"></el-option>
-                    <el-option label="libx265" value="libx265"></el-option>
-                    <el-option label="h264_nvenc" value="h264_nvenc"></el-option>
-                </el-select>
-            </el-form-item>
-            <el-form-item label="音频编码器">
-                <el-select v-model="form.audioCodec" placeholder="请选择音频编码器">
-                    <el-option label="" value=""></el-option>
-                    <el-option label="aac" value="aac"></el-option>
-                    <el-option label="libmp3lame" value="libmp3lame"></el-option>
-                    <el-option label="opus" value="opus"></el-option>
-                </el-select>
-            </el-form-item>
-            <el-form-item label="分辨率">
-                <el-input v-model="form.resolution" placeholder="请输入分辨率（例如：1920x1080）"></el-input>
-            </el-form-item>
-            <el-form-item label="音频采样率">
-                <el-input v-model="form.audioSampleRate" placeholder="请输入音频采样率（例如：48000）"></el-input>
-            </el-form-item>
-            <el-form-item label="音频比特率">
-                <el-input v-model="form.audioBitrate" placeholder="请输入音频比特率（例如：128k）"></el-input>
-            </el-form-item>
-            <el-form-item label="视频比特率">
-                <el-input v-model="form.bitrate" placeholder="请输入比特率（例如：1000k）"></el-input>
-            </el-form-item>
-            <el-form-item label="帧率">
-                <el-input v-model="form.framerate" placeholder="请输入帧率（例如：30）"></el-input>
-            </el-form-item>
-            <el-form-item style="margin-top: 40px;">
-                <el-button style="margin-left: 35%;" type="primary" @click="onSubmit">保存配置</el-button>
-            </el-form-item>
-        </el-form>
+            <!-- ===== 视频设置 ===== -->
+            <div class="settings-section">
+                <div class="section-header">
+                    <span class="section-icon">🎬</span>
+                    <span class="section-label">视频设置</span>
+                </div>
+                <el-form :model="form" label-width="110px" label-position="left">
+                    <el-form-item label="视频编码器">
+                        <el-select v-model="form.videoCodec" placeholder="请选择视频编码器">
+                            <el-option label="" value=""></el-option>
+                            <el-option label="libx264" value="libx264"></el-option>
+                            <el-option label="libx265" value="libx265"></el-option>
+                            <el-option label="h264_nvenc" value="h264_nvenc"></el-option>
+                        </el-select>
+                    </el-form-item>
+                    <el-form-item label="分辨率">
+                        <el-input v-model="form.resolution" placeholder="例如：1920x1080"></el-input>
+                    </el-form-item>
+                    <el-form-item label="视频比特率">
+                        <el-input v-model="form.bitrate" placeholder="例如：1000k"></el-input>
+                    </el-form-item>
+                    <el-form-item label="帧率">
+                        <el-input v-model="form.framerate" placeholder="例如：30"></el-input>
+                    </el-form-item>
+                </el-form>
+            </div>
+
+            <!-- ===== 分隔线 ===== -->
+            <el-divider class="section-divider">
+                <span class="divider-label">音 频</span>
+            </el-divider>
+
+            <!-- ===== 音频设置 ===== -->
+            <div class="settings-section">
+                <div class="section-header">
+                    <span class="section-icon">🎵</span>
+                    <span class="section-label">音频设置</span>
+                </div>
+                <el-form :model="form" label-width="110px" label-position="left">
+                    <el-form-item label="音频编码器">
+                        <el-select v-model="form.audioCodec" placeholder="请选择音频编码器">
+                            <el-option label="" value=""></el-option>
+                            <el-option label="aac" value="aac"></el-option>
+                            <el-option label="libmp3lame" value="libmp3lame"></el-option>
+                            <el-option label="opus" value="opus"></el-option>
+                        </el-select>
+                    </el-form-item>
+                    <el-form-item label="音频采样率">
+                        <el-input v-model="form.audioSampleRate" placeholder="例如：48000"></el-input>
+                    </el-form-item>
+                    <el-form-item label="音频比特率">
+                        <el-input v-model="form.audioBitrate" placeholder="例如：128k"></el-input>
+                    </el-form-item>
+                </el-form>
+            </div>
+
+            <!-- ===== 保存按钮 ===== -->
+            <div class="settings-actions">
+                <el-button type="primary" size="large" @click="onSubmit">
+                    保存配置
+                </el-button>
+            </div>
+        </div>
     </div>
 </template>
 
@@ -107,7 +139,7 @@ const onSubmit = async () => {
     if (form.bitrate) {
         ffmpegCommand += ` -b:v ${form.bitrate}`;
         // 判断是否带‘k’结尾
-        if (!form.audioBitrate.endsWith('k') && !form.audioBitrate.endsWith('K')) {
+        if (!form.bitrate.endsWith('k') && !form.bitrate.endsWith('K')) {
             ffmpegCommand += 'k';
         }
     }
@@ -126,17 +158,88 @@ const onSubmit = async () => {
 </script>
 
 <style scoped>
-.card-header {
+.settings-page {
     display: flex;
-    justify-content: space-between;
+    justify-content: center;
+    padding: var(--space-8) var(--space-4);
+    min-height: 100vh;
+    background-color: var(--color-bg-subtle);
+}
+
+.settings-card {
+    width: 100%;
+    max-width: 560px;
+    background-color: var(--color-white);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-xl);
+    box-shadow: var(--shadow-md);
+    padding: var(--space-8);
+}
+
+/* --- Header --- */
+.settings-header {
+    margin-bottom: var(--space-6);
+    text-align: center;
+}
+
+.settings-title {
+    font-size: var(--text-2xl);
+    font-weight: var(--font-bold);
+    color: var(--color-text);
+    margin-bottom: var(--space-1);
+}
+
+.settings-subtitle {
+    font-size: var(--text-sm);
+    color: var(--color-text-muted);
+}
+
+/* --- Section --- */
+.settings-section {
+    padding: var(--space-2) 0;
+}
+
+.section-header {
+    display: flex;
     align-items: center;
+    gap: var(--space-2);
+    margin-bottom: var(--space-4);
 }
 
-.text {
-    font-size: 14px;
+.section-icon {
+    font-size: var(--text-lg);
 }
 
-.item {
-    margin-bottom: 18px;
+.section-label {
+    font-size: var(--text-base);
+    font-weight: var(--font-semibold);
+    color: var(--color-text);
+    letter-spacing: var(--tracking-wide);
+}
+
+/* --- Divider --- */
+.section-divider {
+    margin: var(--space-6) 0;
+}
+
+.divider-label {
+    font-size: var(--text-xs);
+    font-weight: var(--font-semibold);
+    color: var(--color-text-muted);
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+}
+
+/* --- Actions --- */
+.settings-actions {
+    display: flex;
+    justify-content: center;
+    margin-top: var(--space-8);
+    padding-top: var(--space-6);
+    border-top: 1px solid var(--color-border);
+}
+
+.settings-actions .el-button {
+    min-width: 160px;
 }
 </style>

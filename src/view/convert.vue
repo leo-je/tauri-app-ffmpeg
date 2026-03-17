@@ -1,81 +1,124 @@
 <template>
-  <div class="app">
-    <el-form :model="form" label-width="140px">
-      <el-row>
-        <el-col :span="18">
-          <div class="grid-content ep-bg-purple" />
-          <el-form-item label="1.源文件">
-            <el-input disabled v-model="form.filePath" />
-          </el-form-item>
-        </el-col>
-        <el-col :span="1"></el-col>
-        <el-col :span="3"><el-button type="primary" @click="selectFile">选择</el-button></el-col>
-        <el-col :span="2"></el-col>
-      </el-row>
-
-      <el-row>
-        <el-col :span="18">
-          <el-form-item label="2.目标格式">
-            <el-select v-model="form.format" placeholder="请选择需要转换的格式">
-              <el-option v-for="item in audioFormats" :key="item" :label="item" :value="item" />
-            </el-select>
-          </el-form-item>
-        </el-col>
-      </el-row>
-
-      <el-form-item label="3.转换参数">
-        <el-switch v-model="form.isAugment" />
-      </el-form-item>
-      <el-row>
-        <el-col :span="18">
-          <el-form-item label="">
-            <el-input :disabled="!form.isAugment" v-model="form.augment" :readonly="true" />
-          </el-form-item>
-        </el-col>
-        <el-col :span="1"></el-col>
-        <el-col :span="2"><el-button :disabled="!form.isAugment" type="primary"
-            @click="openSetting">参数配置</el-button></el-col>
-      </el-row>
-
-
-      <el-row>
-        <el-col :span="18">
-          <div class="grid-content ep-bg-purple" />
-          <el-form-item label="4.输出目录">
-            <el-input disabled v-model="form.outPath" />
-          </el-form-item>
-        </el-col>
-        <el-col :span="1"></el-col>
-        <el-col :span="2"><el-button type="primary" @click="selectDirectory">选择</el-button></el-col>
-        <el-col :span="2"><el-button type="primary" @click="openDir">打开</el-button></el-col>
-        <el-col :span="1"></el-col>
-      </el-row>
-
-      <el-row style="margin-top: 30px;">
-        <el-col :span="11"></el-col>
-        <el-col :span="8">
-          <el-button :disabled="(!form.filePath || !form.outPath || !form.format) || form.isConverting" type="success"
-            @click="convert">{{ form.isConverting ? '转换中...' : '开始转换' }}</el-button>
-        </el-col>
-      </el-row>
-
-      <div>
-        <span>日志</span>
-        <el-row style="margin-top: 10px;">
-          <el-col :span="24">
-            <el-input :id="'textlog'" v-model="loginfo" :autosize="{ minRows: 10, maxRows: 10 }" :readonly="true"
-              type="textarea" placeholder :input-style="{
-                'background-color': '#554a4a',
-                color: 'white',
-                'font-size': '14px',
-                'font-weight': '400',
-                'font-family': 'monospace'
-              }"></el-input>
-          </el-col>
-        </el-row>
-
+  <div class="convert-page">
+    <div class="convert-card">
+      <!-- Card Header -->
+      <div class="card-header">
+        <h2 class="card-title">音频格式转换</h2>
+        <p class="card-subtitle">选择源文件和目标格式，一键完成转换</p>
       </div>
-    </el-form>
+
+      <!-- Source File Section -->
+      <div class="form-section">
+        <div class="section-header">
+          <span class="section-icon">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14.5 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7.5L14.5 2z"/><polyline points="14,2 14,8 20,8"/></svg>
+          </span>
+          <span class="section-title">源文件</span>
+        </div>
+        <div class="form-row">
+          <div class="input-wrapper" :class="{ 'has-value': form.filePath }">
+            <el-input v-model="form.filePath" placeholder="未选择文件" readonly />
+            <span v-if="!form.filePath" class="empty-hint">请选择要转换的音频文件</span>
+          </div>
+          <el-button type="primary" @click="selectFile" class="action-btn">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-right: 6px"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/></svg>
+            选择文件
+          </el-button>
+        </div>
+      </div>
+
+      <!-- Target Format Section -->
+      <div class="form-section">
+        <div class="section-header">
+          <span class="section-icon">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 2 7 12 12 22 7 12 2"/><polyline points="2 17 12 22 22 17"/><polyline points="2 12 12 17 22 12"/></svg>
+          </span>
+          <span class="section-title">目标格式</span>
+        </div>
+        <div class="form-row">
+          <div class="input-wrapper">
+            <el-select v-model="form.format" placeholder="选择需要转换的格式">
+              <el-option v-for="item in audioFormats" :key="item" :label="item.toUpperCase()" :value="item" />
+            </el-select>
+          </div>
+        </div>
+      </div>
+
+      <!-- Conversion Parameters Section -->
+      <div class="form-section">
+        <div class="section-header">
+          <span class="section-icon">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+          </span>
+          <span class="section-title">转换参数</span>
+        </div>
+        <div class="form-row form-row-toggle">
+          <el-switch v-model="form.isAugment" />
+          <span class="toggle-label">启用自定义参数</span>
+        </div>
+        <div class="form-row" v-if="form.isAugment || form.augment">
+          <div class="input-wrapper">
+            <el-input :disabled="!form.isAugment" v-model="form.augment" readonly />
+          </div>
+          <el-button :disabled="!form.isAugment" type="primary" @click="openSetting" class="action-btn">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-right: 6px"><line x1="4" y1="21" x2="4" y2="14"/><line x1="4" y1="10" x2="4" y2="3"/><line x1="12" y1="21" x2="12" y2="12"/><line x1="12" y1="8" x2="12" y2="3"/><line x1="20" y1="21" x2="20" y2="16"/><line x1="20" y1="12" x2="20" y2="3"/><line x1="1" y1="14" x2="7" y2="14"/><line x1="9" y1="8" x2="15" y2="8"/><line x1="17" y1="16" x2="23" y2="16"/></svg>
+            参数配置
+          </el-button>
+        </div>
+      </div>
+
+      <!-- Output Directory Section -->
+      <div class="form-section">
+        <div class="section-header">
+          <span class="section-icon">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/><line x1="12" y1="11" x2="12" y2="17"/><polyline points="9 14 12 11 15 14"/></svg>
+          </span>
+          <span class="section-title">输出目录</span>
+        </div>
+        <div class="form-row">
+          <div class="input-wrapper" :class="{ 'has-value': form.outPath }">
+            <el-input v-model="form.outPath" placeholder="未选择输出目录" readonly />
+            <span v-if="!form.outPath" class="empty-hint">请选择转换后文件的保存位置</span>
+          </div>
+          <el-button type="primary" @click="selectDirectory" class="action-btn">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-right: 6px"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/></svg>
+            选择
+          </el-button>
+          <el-button type="primary" @click="openDir" class="action-btn action-btn-secondary">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-right: 6px"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+            打开
+          </el-button>
+        </div>
+      </div>
+
+      <!-- Convert Button -->
+      <div class="convert-action">
+        <el-button
+          :disabled="(!form.filePath || !form.outPath || !form.format) || form.isConverting"
+          type="success"
+          size="large"
+          @click="convert"
+          class="convert-btn"
+        >
+          <svg v-if="!form.isConverting" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-right: 8px"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+          <svg v-else width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-right: 8px" class="spin-icon"><line x1="12" y1="2" x2="12" y2="6"/><line x1="12" y1="18" x2="12" y2="22"/><line x1="4.93" y1="4.93" x2="7.76" y2="7.76"/><line x1="16.24" y1="16.24" x2="19.07" y2="19.07"/><line x1="2" y1="12" x2="6" y2="12"/><line x1="18" y1="12" x2="22" y2="12"/><line x1="4.93" y1="19.07" x2="7.76" y2="16.24"/><line x1="16.24" y1="7.76" x2="19.07" y2="4.93"/></svg>
+          {{ form.isConverting ? '转换中...' : '开始转换' }}
+        </el-button>
+      </div>
+    </div>
+
+    <!-- Terminal Log Panel -->
+    <div class="log-container">
+      <div class="log-header">
+        <div class="log-dots">
+          <span class="dot dot-red"></span>
+          <span class="dot dot-yellow"></span>
+          <span class="dot dot-green"></span>
+        </div>
+        <span class="log-title">转换日志</span>
+      </div>
+      <pre ref="logRef" class="log-content terminal-scrollbar">{{ loginfo || '等待转换...' }}</pre>
+    </div>
   </div>
 </template>
 
@@ -115,6 +158,7 @@ const audioFormats = [
 ]
 
 let loginfo = ref('')
+const logRef = ref<HTMLElement | null>(null)
 
 let filePath: any = null
 let format: any = null
@@ -188,9 +232,9 @@ const openDir = () => {
 
 
 const logChange = () => {
-  let textarea = document.getElementById('textlog')
-  if (textarea) textarea.scrollTop = textarea.scrollHeight;
-
+  if (logRef.value) {
+    logRef.value.scrollTop = logRef.value.scrollHeight;
+  }
 }
 
 watch(loginfo, (_newValue, _oldValue) => {
@@ -306,8 +350,8 @@ const openSetting = () => {
     label: "setting",
     title: "参数设置",
     url: "/setting",
-    width: 820,
-    height: 500,
+    width: 640,
+    height: 520,
     resizable: false,
     minimizable: true,
     maximizable: true,
@@ -334,8 +378,251 @@ const openSetting = () => {
 
 
 <style scoped>
-.app {
+/* ============================================
+   PAGE LAYOUT
+   ============================================ */
+
+.convert-page {
   width: 100%;
-  margin-top: 50px;
+  max-width: var(--app-max-width);
+  margin: 0 auto;
+  padding: var(--space-8) var(--space-6);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-6);
+}
+
+/* ============================================
+   MAIN CARD
+   ============================================ */
+
+.convert-card {
+  background: var(--color-white);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-xl);
+  box-shadow: var(--shadow-md);
+  padding: var(--space-8);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-6);
+}
+
+/* Card Header */
+.card-header {
+  text-align: center;
+  padding-bottom: var(--space-6);
+  border-bottom: 1px solid var(--color-border);
+}
+
+.card-title {
+  font-size: var(--text-2xl);
+  font-weight: var(--font-bold);
+  color: var(--color-text);
+  letter-spacing: var(--tracking-tight);
+  margin-bottom: var(--space-2);
+}
+
+.card-subtitle {
+  font-size: var(--text-base);
+  color: var(--color-text-secondary);
+  margin: 0;
+}
+
+/* ============================================
+   FORM SECTIONS
+   ============================================ */
+
+.form-section {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+}
+
+.section-header {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+}
+
+.section-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  border-radius: var(--radius-md);
+  background: var(--color-primary-bg);
+  color: var(--color-primary);
+  flex-shrink: 0;
+}
+
+.section-title {
+  font-size: var(--text-md);
+  font-weight: var(--font-semibold);
+  color: var(--color-text);
+}
+
+/* ============================================
+   FORM ROWS (Flexbox)
+   ============================================ */
+
+.form-row {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+}
+
+.form-row-toggle {
+  gap: var(--space-3);
+}
+
+.toggle-label {
+  font-size: var(--text-base);
+  color: var(--color-text-secondary);
+}
+
+.input-wrapper {
+  flex: 1;
+  position: relative;
+}
+
+.input-wrapper .el-input,
+.input-wrapper .el-select {
+  width: 100%;
+}
+
+/* Empty state hint */
+.empty-hint {
+  position: absolute;
+  left: var(--space-3);
+  bottom: calc(-1 * var(--space-5));
+  font-size: var(--text-xs);
+  color: var(--color-text-muted);
+  pointer-events: none;
+}
+
+.input-wrapper.has-value .empty-hint {
+  display: none;
+}
+
+/* Action buttons */
+.action-btn {
+  flex-shrink: 0;
+}
+
+.action-btn-secondary {
+  opacity: 0.85;
+}
+
+/* ============================================
+   CONVERT BUTTON
+   ============================================ */
+
+.convert-action {
+  display: flex;
+  justify-content: center;
+  padding-top: var(--space-4);
+  border-top: 1px solid var(--color-border);
+}
+
+.convert-btn {
+  min-width: 200px;
+  height: 48px;
+  font-size: var(--text-md);
+  font-weight: var(--font-semibold);
+  border-radius: var(--radius-lg) !important;
+  box-shadow: var(--shadow-success) !important;
+  transition: transform var(--transition-fast), box-shadow var(--transition-fast) !important;
+}
+
+.convert-btn:not(:disabled):hover {
+  transform: translateY(-1px);
+  box-shadow: 0 6px 20px -3px rgba(34, 197, 94, 0.45) !important;
+}
+
+.convert-btn:not(:disabled):active {
+  transform: translateY(0);
+}
+
+/* Spinning icon for converting state */
+.spin-icon {
+  animation: spin 1.2s linear infinite;
+}
+
+@keyframes spin {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+/* ============================================
+   TERMINAL LOG PANEL
+   ============================================ */
+
+.log-container {
+  background: var(--terminal-bg);
+  border-radius: var(--radius-xl);
+  overflow: hidden;
+  box-shadow: var(--shadow-lg);
+  border: 1px solid var(--terminal-surface);
+}
+
+.log-header {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  padding: var(--space-3) var(--space-4);
+  background: var(--terminal-bg-alt);
+  border-bottom: 1px solid var(--terminal-surface);
+}
+
+.log-dots {
+  display: flex;
+  gap: var(--space-2);
+}
+
+.dot {
+  width: 12px;
+  height: 12px;
+  border-radius: var(--radius-full);
+}
+
+.dot-red {
+  background: var(--terminal-error);
+}
+
+.dot-yellow {
+  background: var(--terminal-warning);
+}
+
+.dot-green {
+  background: var(--terminal-success);
+}
+
+.log-title {
+  font-size: var(--text-sm);
+  font-weight: var(--font-medium);
+  color: var(--terminal-text-subtle);
+  font-family: var(--font-mono);
+}
+
+.log-content {
+  margin: 0;
+  padding: var(--space-4);
+  min-height: 220px;
+  max-height: 300px;
+  overflow-y: auto;
+  font-family: var(--font-mono);
+  font-size: var(--text-sm);
+  line-height: var(--leading-relaxed);
+  color: var(--terminal-text);
+  background: var(--terminal-bg);
+  white-space: pre-wrap;
+  word-break: break-all;
+}
+
+/* Waiting state text */
+.log-content:empty::before,
+.log-content {
+  color: var(--terminal-text);
 }
 </style>

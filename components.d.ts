@@ -7,10 +7,9 @@ export {}
 /* prettier-ignore */
 declare module 'vue' {
   export interface GlobalComponents {
-    ConversionOptions: typeof import('./src/components/ConversionOptions.vue')['default']
     ElButton: typeof import('element-plus/es')['ElButton']
-    ElCard: typeof import('element-plus/es')['ElCard']
     ElCol: typeof import('element-plus/es')['ElCol']
+    ElDivider: typeof import('element-plus/es')['ElDivider']
     ElForm: typeof import('element-plus/es')['ElForm']
     ElFormItem: typeof import('element-plus/es')['ElFormItem']
     ElInput: typeof import('element-plus/es')['ElInput']
@@ -18,7 +17,6 @@ declare module 'vue' {
     ElRow: typeof import('element-plus/es')['ElRow']
     ElSelect: typeof import('element-plus/es')['ElSelect']
     ElSwitch: typeof import('element-plus/es')['ElSwitch']
-    FileSelector: typeof import('./src/components/FileSelector.vue')['default']
     RouterLink: typeof import('vue-router')['RouterLink']
     RouterView: typeof import('vue-router')['RouterView']
   }
