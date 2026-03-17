@@ -3,8 +3,8 @@ on:
   push:
     branches:
       - dev
-  schedule:
-    - cron: '0 12 * * *'
+  # schedule:
+  #   - cron: '0 12 * * *'
   pull_request:
     branches:
       - dev
