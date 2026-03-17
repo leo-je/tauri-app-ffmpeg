@@ -77,19 +77,16 @@
 </template>
 
 <script lang="ts" setup>
-import { reactive, ref } from 'vue';
+import { reactive, ref, onMounted } from 'vue';
 import { getCurrent } from '../utils/WindowsUtils';
-import { Store } from '@tauri-apps/plugin-store';
+import { loadFormData, loadSettingsForm, saveSettingsForm, saveFfmpegArgs } from '../stores/appStore';
+import type { SettingForm, FormatType } from '../types';
+import { ElMessage } from 'element-plus';
 
-// 从 localStorage 读取格式类型, 默认 'audio'
-const formatType = ref(localStorage.getItem('formatType') || 'audio');
+const formatType = ref<FormatType>('audio');
+const activeTab = ref('audio');
 
-// 如果是音频格式, 默认激活音频 tab; 视频格式默认视频 tab
-const activeTab = ref(formatType.value === 'video' ? 'video' : 'audio');
-
-let store: any = null;
-
-const form = reactive({
+const form = reactive<SettingForm>({
     inputFile: '',
     outputFile: '',
     videoCodec: '',
@@ -101,18 +98,60 @@ const form = reactive({
     framerate: ''
 });
 
-(async () => {
-    console.log('init store, formatType:', formatType.value)
-    store = await Store.load('store.json');
-    let f = await store.get('form')
-    console.log(f)
-    if (f) {
-        Object.assign(form, f);
+const CODEC_PATTERN = /^[a-zA-Z0-9_]*$/;
+const RESOLUTION_PATTERN = /^[0-9]+x[0-9]+$/;
+const NUMERIC_PATTERN = /^[0-9]+[kKmMgG]?$/;
+const FRAMERATE_PATTERN = /^[0-9]+$/;
+
+function validateForm(): string | null {
+    if (form.videoCodec && !CODEC_PATTERN.test(form.videoCodec)) {
+        return '视频编码器格式无效';
     }
-})()
+    if (form.audioCodec && !CODEC_PATTERN.test(form.audioCodec)) {
+        return '音频编码器格式无效';
+    }
+    if (form.resolution && !RESOLUTION_PATTERN.test(form.resolution)) {
+        return '分辨率格式无效，应为如 1920x1080';
+    }
+    if (form.audioSampleRate && !FRAMERATE_PATTERN.test(form.audioSampleRate)) {
+        return '采样率格式无效，应为数字';
+    }
+    if (form.audioBitrate && !NUMERIC_PATTERN.test(form.audioBitrate)) {
+        return '音频比特率格式无效';
+    }
+    if (form.bitrate && !NUMERIC_PATTERN.test(form.bitrate)) {
+        return '视频比特率格式无效';
+    }
+    if (form.framerate && !FRAMERATE_PATTERN.test(form.framerate)) {
+        return '帧率格式无效，应为数字';
+    }
+    return null;
+}
+
+onMounted(async () => {
+    const savedForm = await loadFormData();
+    if (savedForm) {
+        formatType.value = savedForm.formatType;
+        activeTab.value = savedForm.formatType === 'video' ? 'video' : 'audio';
+    }
+    const savedSettings = await loadSettingsForm();
+    if (savedSettings) {
+        form.videoCodec = savedSettings.videoCodec ?? '';
+        form.audioCodec = savedSettings.audioCodec ?? '';
+        form.resolution = savedSettings.resolution ?? '';
+        form.audioSampleRate = savedSettings.audioSampleRate ?? '';
+        form.audioBitrate = savedSettings.audioBitrate ?? '';
+        form.bitrate = savedSettings.bitrate ?? '';
+        form.framerate = savedSettings.framerate ?? '';
+    }
+})
 
 const onSubmit = async () => {
-    console.log('提交的配置:', form);
+    const validationError = validateForm();
+    if (validationError) {
+        ElMessage.error(validationError);
+        return;
+    }
     let ffmpegCommand = ``;
 
     if (form.videoCodec) {
@@ -148,10 +187,8 @@ const onSubmit = async () => {
     if (form.framerate) {
         ffmpegCommand += ` -r ${form.framerate}`;
     }
-    await store.set('form', form);
-    await store.save();
-    localStorage.setItem('ffmpegCommandArg', ffmpegCommand)
-    console.log('生成的 FFmpeg 命令:', ffmpegCommand);
+    await saveSettingsForm({ ...form });
+    await saveFfmpegArgs(ffmpegCommand);
     let win = getCurrent();
     win.close()
 };

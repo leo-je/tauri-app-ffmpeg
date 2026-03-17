@@ -1,18 +1,17 @@
-// src/router.js
 import { createRouter, createWebHistory } from 'vue-router';
-import convert from './view/convert.vue';
-import setting from './view/setting.vue';
+import Convert from './view/convert.vue';
+import Setting from './view/setting.vue';
 
 const routes = [
   {
     path: '/',
     name: 'convert',
-    component: convert
+    component: Convert
   },
   {
     path: '/setting',
     name: 'setting',
-    component: setting
+    component: Setting
   }
 ];
 

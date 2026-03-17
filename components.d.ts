@@ -7,6 +7,7 @@ export {}
 /* prettier-ignore */
 declare module 'vue' {
   export interface GlobalComponents {
+    ConversionParamsSection: typeof import('./src/components/convert/ConversionParamsSection.vue')['default']
     ElButton: typeof import('element-plus/es')['ElButton']
     ElCol: typeof import('element-plus/es')['ElCol']
     ElDivider: typeof import('element-plus/es')['ElDivider']
@@ -22,7 +23,11 @@ declare module 'vue' {
     ElSwitch: typeof import('element-plus/es')['ElSwitch']
     ElTabPane: typeof import('element-plus/es')['ElTabPane']
     ElTabs: typeof import('element-plus/es')['ElTabs']
+    OutputDirSection: typeof import('./src/components/convert/OutputDirSection.vue')['default']
     RouterLink: typeof import('vue-router')['RouterLink']
     RouterView: typeof import('vue-router')['RouterView']
+    SourceFileSection: typeof import('./src/components/convert/SourceFileSection.vue')['default']
+    TargetFormatSection: typeof import('./src/components/convert/TargetFormatSection.vue')['default']
+    TerminalLog: typeof import('./src/components/convert/TerminalLog.vue')['default']
   }
 }
