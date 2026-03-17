@@ -4,7 +4,8 @@
         <!-- Tabs (顶部) -->
         <div class="settings-tabs-bar">
             <el-tabs v-model="activeTab" stretch>
-                <el-tab-pane name="video">
+                <!-- 视频 Tab (仅视频格式时显示) -->
+                <el-tab-pane v-if="formatType === 'video'" name="video">
                     <template #label>
                         <span class="tab-label">
                             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="23 7 16 12 23 17 23 7"/><rect x="1" y="5" width="15" height="14" rx="2" ry="2"/></svg>
@@ -12,6 +13,7 @@
                         </span>
                     </template>
                 </el-tab-pane>
+                <!-- 音频 Tab (始终显示) -->
                 <el-tab-pane name="audio">
                     <template #label>
                         <span class="tab-label">
@@ -25,8 +27,8 @@
 
         <!-- Content (中间, 可滚动) -->
         <div class="settings-body">
-            <!-- 视频 -->
-            <el-form v-show="activeTab === 'video'" :model="form" label-width="90px" label-position="left" class="tab-form">
+            <!-- 视频 (仅视频格式时显示) -->
+            <el-form v-show="formatType === 'video' && activeTab === 'video'" :model="form" label-width="90px" label-position="left" class="tab-form">
                 <el-form-item label="编码器">
                     <el-select v-model="form.videoCodec" placeholder="请选择">
                         <el-option label="不指定" value=""></el-option>
@@ -46,7 +48,7 @@
                 </el-form-item>
             </el-form>
 
-            <!-- 音频 -->
+            <!-- 音频 (始终显示) -->
             <el-form v-show="activeTab === 'audio'" :model="form" label-width="90px" label-position="left" class="tab-form">
                 <el-form-item label="编码器">
                     <el-select v-model="form.audioCodec" placeholder="请选择">
@@ -79,7 +81,12 @@ import { reactive, ref } from 'vue';
 import { getCurrent } from '../utils/WindowsUtils';
 import { Store } from '@tauri-apps/plugin-store';
 
-const activeTab = ref('video');
+// 从 localStorage 读取格式类型, 默认 'audio'
+const formatType = ref(localStorage.getItem('formatType') || 'audio');
+
+// 如果是音频格式, 默认激活音频 tab; 视频格式默认视频 tab
+const activeTab = ref(formatType.value === 'video' ? 'video' : 'audio');
+
 let store: any = null;
 
 const form = reactive({
@@ -95,7 +102,7 @@ const form = reactive({
 });
 
 (async () => {
-    console.log('init store')
+    console.log('init store, formatType:', formatType.value)
     store = await Store.load('store.json');
     let f = await store.get('form')
     console.log(f)

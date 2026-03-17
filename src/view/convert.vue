@@ -3,7 +3,7 @@
     <div class="convert-card">
       <!-- Card Header -->
       <div class="card-header">
-        <h2 class="card-title">音频格式转换</h2>
+        <h2 class="card-title">格式转换</h2>
         <p class="card-subtitle">选择源文件和目标格式，一键完成转换</p>
       </div>
 
@@ -18,7 +18,7 @@
         <div class="form-row">
           <div class="input-wrapper" :class="{ 'has-value': form.filePath }">
             <el-input v-model="form.filePath" placeholder="未选择文件" readonly />
-            <span v-if="!form.filePath" class="empty-hint">请选择要转换的音频文件</span>
+            <span v-if="!form.filePath" class="empty-hint">请选择要转换的文件</span>
           </div>
           <el-button type="primary" @click="selectFile" class="action-btn">
             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-right: 6px"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/></svg>
@@ -35,10 +35,27 @@
           </span>
           <span class="section-title">目标格式</span>
         </div>
-        <div class="form-row">
+        <div class="form-row format-row">
+          <div class="format-type-switch">
+            <el-radio-group v-model="form.formatType" size="small">
+              <el-radio-button value="audio">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-right: 4px; vertical-align: -2px"><path d="M9 18V5l12-2v13"/><circle cx="6" cy="18" r="3"/><circle cx="18" cy="16" r="3"/></svg>
+                音频
+              </el-radio-button>
+              <el-radio-button value="video">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-right: 4px; vertical-align: -2px"><polygon points="23 7 16 12 23 17 23 7"/><rect x="1" y="5" width="15" height="14" rx="2" ry="2"/></svg>
+                视频
+              </el-radio-button>
+            </el-radio-group>
+          </div>
           <div class="input-wrapper">
-            <el-select v-model="form.format" placeholder="选择需要转换的格式">
-              <el-option v-for="item in audioFormats" :key="item" :label="item.toUpperCase()" :value="item" />
+            <el-select v-model="form.format" placeholder="选择目标格式" @change="onFormatChange">
+              <el-option-group v-if="form.formatType === 'audio'" label="音频格式">
+                <el-option v-for="item in audioFormats" :key="item" :label="item.toUpperCase()" :value="item" />
+              </el-option-group>
+              <el-option-group v-else label="视频格式">
+                <el-option v-for="item in videoFormats" :key="item" :label="item.toUpperCase()" :value="item" />
+              </el-option-group>
             </el-select>
           </div>
         </div>
@@ -136,25 +153,16 @@ let store: any = null;//await Store.load('store.json');
 
 
 
-// 定义所有的音频格式
+// 定义音频格式
 const audioFormats = [
-  'mp3',
-  'wav',
-  'ogg',
-  'flac',
-  'aac',
-  'wma',
-  'm4a',
-  'ape',
-  'aiff',
-  'au',
-  'mid',
-  'midi',
-  'mp2',
-  'mpa',
-  'mp4',
-  'mpa',
-  'mpga',
+  'mp3', 'wav', 'ogg', 'flac', 'aac', 'wma',
+  'm4a', 'ape', 'aiff', 'au', 'mid', 'midi',
+  'mp2', 'mpa', 'mpga',
+]
+
+// 定义视频格式
+const videoFormats = [
+  'mp4', 'avi', 'mkv', 'mov', 'wmv', 'flv', 'webm',
 ]
 
 let loginfo = ref('')
@@ -167,11 +175,17 @@ const form = reactive({
   filePath,
   format,
   outPath,
+  formatType: 'audio' as 'audio' | 'video',
   isAugment: false,
   augment: '-b:a 320k -ar 48000',
   logs: '',
   isConverting: false
 })
+
+// 切换格式类型时, 清空已选格式
+const onFormatChange = () => {
+  // format changed
+}
 
 const setting = () => {
   store.set('form', form);
@@ -346,6 +360,8 @@ echo "结束转换..."
 const openSetting = () => {
   let main = getCurrent()
   main.setEnabled(false)
+  // 传递 formatType 给设置窗口
+  localStorage.setItem('formatType', form.formatType)
   createWin({
     label: "setting",
     title: "参数设置",
@@ -474,6 +490,20 @@ const openSetting = () => {
 
 .form-row-toggle {
   gap: var(--space-3);
+}
+
+.format-row {
+  flex-wrap: wrap;
+  gap: var(--space-3);
+}
+
+.format-type-switch {
+  flex-shrink: 0;
+}
+
+.format-row .input-wrapper {
+  flex: 1;
+  min-width: 200px;
 }
 
 .toggle-label {
