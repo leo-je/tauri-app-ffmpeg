@@ -351,7 +351,7 @@ const openSetting = () => {
     title: "参数设置",
     url: "/setting",
     width: 640,
-    height: 520,
+    height: 620,
     resizable: false,
     minimizable: true,
     maximizable: true,
