@@ -1,4 +1,4 @@
-import { createStore, type Store } from '@tauri-apps/plugin-store';
+import { load, type Store } from '@tauri-apps/plugin-store';
 import type { AppFormData, SettingForm } from '../types';
 
 let storeInstance: Store | null = null;
@@ -7,7 +7,7 @@ let initPromise: Promise<Store> | null = null;
 async function getStore(): Promise<Store> {
   if (storeInstance) return storeInstance;
   if (!initPromise) {
-    initPromise = createStore('store.json').then((s: Store) => {
+    initPromise = load('store.json').then((s: Store) => {
       storeInstance = s;
       return s;
     });

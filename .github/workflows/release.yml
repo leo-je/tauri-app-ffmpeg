@@ -129,10 +129,14 @@ jobs:
           Copy-Item -Path ".\ffmpeg\ffmpeg-master-latest-win64-gpl-shared\*" -Destination ".\src-tauri\assets\win\ffmpeg" -Recurse -Force
           ls ".\src-tauri\assets\win\ffmpeg"
 
+      - name: Ensure npm is used
+        run: rm -f yarn.lock
+
       - name: Create GitHub Release for macos
         uses: tauri-apps/tauri-action@v0
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          CI: true
         with:
           tagName: ${{needs.get_version.outputs.tagName}}
           releaseName: ${{needs.get_version.outputs.releaseName}}
